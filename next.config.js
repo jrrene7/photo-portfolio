@@ -8,7 +8,14 @@ const nextConfig = {
         port: "",
         pathname: "/photo-150434945",
       },
+      {
+        protocol: "https",
+        hostname: "adobe.ly",
+        port: "",
+        pathname: "/48kLlcl"
+      },
     ],
+    unoptimized: true,
   },
 };
 
