@@ -29,11 +29,13 @@ const packages = [
     name: "Starter",
     price: "$250",
     badge: "Entry point",
+    calendlyUrl:
+      "https://calendly.com/renevision-media/15-minute-meeting-clone-clone",
     details: [
       "1-hour session",
-      "10 edited photos",
+      "5 edited photos",
       "Online gallery delivery",
-      "Ideal for portraits and profile refreshes",
+      "Ideal for professional headshots/portraits and social media profile refreshes",
     ],
   },
   {
@@ -41,9 +43,11 @@ const packages = [
     price: "$450",
     badge: "Most booked",
     featured: true,
+    calendlyUrl:
+      "https://calendly.com/renevision-media/30-minute-meeting-clone",
     details: [
       "2-hour session",
-      "20 edited photos",
+      "10 edited photos",
       "Creative planning call",
       "Best for couples, editorials, and personal brands",
     ],
@@ -51,7 +55,8 @@ const packages = [
   {
     name: "Brand Retainer",
     price: "$900/mo",
-    badge: "Recurring revenue",
+    badge: "Recurring Services",
+    calendlyUrl: "https://calendly.com/renevision-media/30min",
     details: [
       "Monthly content session",
       "25 edited images each month",
@@ -166,7 +171,7 @@ export default function HomeConversionSections() {
               </ul>
 
               <CalendlyPopupButton
-                url={calendlyUrl}
+                url={pack.calendlyUrl ?? calendlyUrl}
                 label="Start inquiry"
                 className={`mt-8 rounded-full px-5 py-3 text-center text-sm font-semibold uppercase tracking-[0.18em] transition ${
                   pack.featured

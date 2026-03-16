@@ -33,4 +33,4 @@ To learn more about Next.js, take a look at the following resources:
 
 ## Deploy on Vercel
 
-Set `Node.js Version` to `24.x` in Vercel project settings, add the variables from `.env.example`, and redeploy.
+Set `Node.js Version` to `24.x` in Vercel project settings, add the required environment variables in Vercel, and redeploy.
