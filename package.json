@@ -20,7 +20,7 @@
     "sharp": "^0.33.2"
   },
   "devDependencies": {
-    "@types/node": "^20",
+    "@types/node": "^24.0.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "autoprefixer": "^10.4.16",
