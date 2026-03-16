@@ -20,6 +20,12 @@ type Photo = {
   category: Exclude<TabKey, "all">;
 };
 
+type RemotePhoto = {
+  src: string;
+  alt?: string;
+  name?: string;
+};
+
 const fallbackPhotos: Photo[] = [
   {
     src: "/photo-portfolio-bg.jpg",
@@ -41,7 +47,6 @@ const fallbackPhotos: Photo[] = [
 
 export default function Home() {
   const [photos, setPhotos] = useState<Photo[]>(fallbackPhotos);
-  const [lightboxPhoto, setLightboxPhoto] = useState<Photo | null>(null);
   const [lightboxList, setLightboxList] = useState<Photo[]>([]);
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [activeTabIndex, setActiveTabIndex] = useState(0);
@@ -53,7 +58,7 @@ export default function Home() {
         if (!res.ok) throw new Error("Frame.io request failed");
         const data = await res.json();
         if (Array.isArray(data.photos) && data.photos.length) {
-          const mapped: Photo[] = data.photos.map((p: any) => ({
+          const mapped: Photo[] = data.photos.map((p: RemotePhoto) => ({
             src: p.src,
             alt: p.alt || p.name || "Frame.io photo",
             category: "everything-else",
@@ -68,7 +73,6 @@ export default function Home() {
   }, []);
 
   const handleCloseLightbox = () => {
-    setLightboxPhoto(null);
     setLightboxList([]);
   };
 
@@ -80,7 +84,6 @@ export default function Home() {
   const openFromTab = (list: Photo[], index: number) => {
     setLightboxList(list);
     setLightboxIndex(index);
-    setLightboxPhoto(list[index]);
   };
 
   return (
@@ -157,10 +160,7 @@ export default function Home() {
             onClose={handleCloseLightbox}
             photos={lightboxList}
             index={lightboxIndex}
-            onChange={(nextIndex) => {
-              setLightboxIndex(nextIndex);
-              setLightboxPhoto(lightboxList[nextIndex]);
-            }}
+            onChange={setLightboxIndex}
           />
         )}
       </div>
