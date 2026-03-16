@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { Tab } from "@headlessui/react";
 import Link from "next/link";
+import CalendlyEmbed from "./components/CalendlyEmbed";
 import PhotoCard from "./components/PhotoCard";
 import Lightbox from "./components/LightBox";
 
@@ -46,6 +47,7 @@ const fallbackPhotos: Photo[] = [
 ];
 
 export default function Home() {
+  const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_URL;
   const [photos, setPhotos] = useState<Photo[]>(fallbackPhotos);
   const [lightboxList, setLightboxList] = useState<Photo[]>([]);
   const [lightboxIndex, setLightboxIndex] = useState(0);
@@ -95,15 +97,15 @@ export default function Home() {
             René Vision
           </span>
           <Link
-            href="#"
+            href="#book"
             className="rounded-full border border-white/50 px-4 py-2 text-white transition hover:border-white hover:bg-white/10 hover:shadow-lg hover:-translate-y-[1px]"
           >
-            Get in touch
+            Book a session
           </Link>
         </header>
 
         <main className="grow">
-          <div className="mx-auto flex max-w-6xl flex-col items-center gap-10 px-6 py-12">
+          <div className="mx-auto flex max-w-6xl flex-col items-center gap-14 px-6 py-12">
             <Tab.Group selectedIndex={activeTabIndex} onChange={setActiveTabIndex}>
               <Tab.List className="mb-8 flex flex-wrap items-center justify-center gap-10">
                 {tabs.map((tab) => (
@@ -151,6 +153,46 @@ export default function Home() {
                 })}
               </Tab.Panels>
             </Tab.Group>
+
+            <section
+              id="book"
+              className="grid w-full gap-8 rounded-[2rem] border border-white/10 bg-black/30 p-6 shadow-2xl backdrop-blur lg:grid-cols-[0.9fr_1.1fr] lg:p-8"
+            >
+              <div className="flex flex-col justify-between gap-6">
+                <div className="space-y-4">
+                  <p className="text-sm uppercase tracking-[0.3em] text-stone-300">
+                    Book René Vision
+                  </p>
+                  <h2 className="font-display text-4xl text-white sm:text-5xl">
+                    Reserve your shoot without leaving the site.
+                  </h2>
+                  <p className="max-w-xl text-base leading-7 text-stone-200">
+                    Use the embedded Calendly scheduler to choose a time, confirm
+                    details, and lock in your session. If you prefer the direct
+                    booking page, use the button below.
+                  </p>
+                </div>
+
+                <div className="flex flex-wrap gap-4">
+                  <Link
+                    href={calendlyUrl ?? "#"}
+                    target={calendlyUrl ? "_blank" : undefined}
+                    rel={calendlyUrl ? "noreferrer" : undefined}
+                    className="rounded-full bg-white px-5 py-3 text-sm font-semibold uppercase tracking-[0.18em] text-black transition hover:-translate-y-[1px] hover:shadow-xl"
+                  >
+                    Open booking page
+                  </Link>
+                  <Link
+                    href="mailto:hello@renevizion.com"
+                    className="rounded-full border border-white/35 px-5 py-3 text-sm font-semibold uppercase tracking-[0.18em] text-white transition hover:border-white hover:bg-white/10"
+                  >
+                    Email instead
+                  </Link>
+                </div>
+              </div>
+
+              <CalendlyEmbed url={calendlyUrl} />
+            </section>
           </div>
         </main>
 
