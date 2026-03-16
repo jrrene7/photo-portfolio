@@ -1,10 +1,10 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Tab } from "@headlessui/react";
 import Link from "next/link";
-import CalendlyEmbed from "./components/CalendlyEmbed";
 import PhotoCard from "./components/PhotoCard";
 import Lightbox from "./components/LightBox";
+import SiteHeader from "./components/SiteHeader";
 
 type TabKey = "all" | "humans" | "nature" | "everything-else";
 
@@ -19,12 +19,6 @@ type Photo = {
   src: string;
   alt: string;
   category: Exclude<TabKey, "all">;
-};
-
-type RemotePhoto = {
-  src: string;
-  alt?: string;
-  name?: string;
 };
 
 const fallbackPhotos: Photo[] = [
@@ -47,32 +41,9 @@ const fallbackPhotos: Photo[] = [
 ];
 
 export default function Home() {
-  const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_URL;
-  const [photos, setPhotos] = useState<Photo[]>(fallbackPhotos);
   const [lightboxList, setLightboxList] = useState<Photo[]>([]);
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [activeTabIndex, setActiveTabIndex] = useState(0);
-
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const res = await fetch("/api/frameio/photos");
-        if (!res.ok) throw new Error("Frame.io request failed");
-        const data = await res.json();
-        if (Array.isArray(data.photos) && data.photos.length) {
-          const mapped: Photo[] = data.photos.map((p: RemotePhoto) => ({
-            src: p.src,
-            alt: p.alt || p.name || "Frame.io photo",
-            category: "everything-else",
-          }));
-          setPhotos(mapped);
-        }
-      } catch (err) {
-        console.error("Frame.io fetch error", err);
-      }
-    };
-    load();
-  }, []);
 
   const handleCloseLightbox = () => {
     setLightboxList([]);
@@ -80,8 +51,8 @@ export default function Home() {
 
   const filteredPhotos = (tabKey: TabKey) =>
     tabKey === "all"
-      ? photos
-      : photos.filter((photo) => photo.category === tabKey);
+      ? fallbackPhotos
+      : fallbackPhotos.filter((photo) => photo.category === tabKey);
 
   const openFromTab = (list: Photo[], index: number) => {
     setLightboxList(list);
@@ -91,31 +62,52 @@ export default function Home() {
   return (
     <div className="flex min-h-screen flex-col bg-[url('/photo-portfolio-bg-2.jpg')] bg-top bg-cover">
       <div className="min-h-screen bg-gradient-to-b from-black/70 via-black/60 to-black/75">
-        <header className="flex items-center justify-between h-[90px] px-12 border-b border-white/15 bg-black/25 backdrop-blur">
-          <div className="text-transparent">.</div>
-          <span className="font-display text-2xl font-semibold uppercase tracking-[0.22em] text-white drop-shadow">
-            René Vision
-          </span>
-          <Link
-            href="#book"
-            className="rounded-full border border-white/50 px-4 py-2 text-white transition hover:border-white hover:bg-white/10 hover:shadow-lg hover:-translate-y-[1px]"
-          >
-            Book a session
-          </Link>
-        </header>
+        <SiteHeader />
 
         <main className="grow">
-          <div className="mx-auto flex max-w-6xl flex-col items-center gap-14 px-6 py-12">
+          <div className="mx-auto flex max-w-6xl flex-col items-center gap-12 px-5 py-8 sm:px-6 sm:py-10 md:px-8 md:py-12">
+            <section className="w-full rounded-[2rem] border border-white/10 bg-black/25 p-6 shadow-2xl backdrop-blur sm:p-8">
+              <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
+                <div className="space-y-4">
+                  <p className="text-sm uppercase tracking-[0.3em] text-stone-300">
+                    René Vision
+                  </p>
+                  <h1 className="font-display text-4xl leading-none text-white sm:text-5xl lg:text-6xl">
+                    Portraits, editorials, and visual stories with a sharper edge.
+                  </h1>
+                  <p className="max-w-2xl text-base leading-7 text-stone-200 sm:text-lg">
+                    Explore the portfolio, then move to the dedicated booking page
+                    when you are ready to lock in a session.
+                  </p>
+                </div>
+
+                <div className="flex flex-col gap-4 sm:flex-row lg:flex-col lg:items-start">
+                  <Link
+                    href="/book"
+                    className="rounded-full bg-white px-5 py-3 text-center text-sm font-semibold uppercase tracking-[0.18em] text-black transition hover:-translate-y-[1px] hover:shadow-xl"
+                  >
+                    Go to booking
+                  </Link>
+                  <Link
+                    href="mailto:hello@renevizion.com"
+                    className="rounded-full border border-white/35 px-5 py-3 text-center text-sm font-semibold uppercase tracking-[0.18em] text-white transition hover:border-white hover:bg-white/10"
+                  >
+                    Contact directly
+                  </Link>
+                </div>
+              </div>
+            </section>
+
             <Tab.Group selectedIndex={activeTabIndex} onChange={setActiveTabIndex}>
-              <Tab.List className="mb-8 flex flex-wrap items-center justify-center gap-10">
+              <Tab.List className="mb-8 flex flex-wrap items-center justify-center gap-4 sm:gap-8">
                 {tabs.map((tab) => (
                   <Tab key={tab.key}>
                     {({ selected }) => (
                       <span
                         className={
                           selected
-                            ? "font-display text-xl text-white border-b-2 border-white pb-1"
-                            : "text-stone-200 transition hover:text-white"
+                            ? "font-display border-b-2 border-white pb-1 text-lg text-white sm:text-xl"
+                            : "text-sm text-stone-200 transition hover:text-white sm:text-base"
                         }
                       >
                         {tab.display}
@@ -130,7 +122,7 @@ export default function Home() {
                   const list = filteredPhotos(tab.key);
                   return (
                     <Tab.Panel key={tab.key}>
-                      <div className="flex flex-wrap justify-center gap-8">
+                      <div className="flex flex-wrap justify-center gap-5 sm:gap-8">
                         {list.length === 0 ? (
                           <p className="text-stone-200">No photos yet.</p>
                         ) : (
@@ -153,46 +145,6 @@ export default function Home() {
                 })}
               </Tab.Panels>
             </Tab.Group>
-
-            <section
-              id="book"
-              className="grid w-full gap-8 rounded-[2rem] border border-white/10 bg-black/30 p-6 shadow-2xl backdrop-blur lg:grid-cols-[0.9fr_1.1fr] lg:p-8"
-            >
-              <div className="flex flex-col justify-between gap-6">
-                <div className="space-y-4">
-                  <p className="text-sm uppercase tracking-[0.3em] text-stone-300">
-                    Book René Vision
-                  </p>
-                  <h2 className="font-display text-4xl text-white sm:text-5xl">
-                    Reserve your shoot without leaving the site.
-                  </h2>
-                  <p className="max-w-xl text-base leading-7 text-stone-200">
-                    Use the embedded Calendly scheduler to choose a time, confirm
-                    details, and lock in your session. If you prefer the direct
-                    booking page, use the button below.
-                  </p>
-                </div>
-
-                <div className="flex flex-wrap gap-4">
-                  <Link
-                    href={calendlyUrl ?? "#"}
-                    target={calendlyUrl ? "_blank" : undefined}
-                    rel={calendlyUrl ? "noreferrer" : undefined}
-                    className="rounded-full bg-white px-5 py-3 text-sm font-semibold uppercase tracking-[0.18em] text-black transition hover:-translate-y-[1px] hover:shadow-xl"
-                  >
-                    Open booking page
-                  </Link>
-                  <Link
-                    href="mailto:hello@renevizion.com"
-                    className="rounded-full border border-white/35 px-5 py-3 text-sm font-semibold uppercase tracking-[0.18em] text-white transition hover:border-white hover:bg-white/10"
-                  >
-                    Email instead
-                  </Link>
-                </div>
-              </div>
-
-              <CalendlyEmbed url={calendlyUrl} />
-            </section>
           </div>
         </main>
 

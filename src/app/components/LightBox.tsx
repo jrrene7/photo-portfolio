@@ -1,6 +1,6 @@
 import { Dialog, Transition } from "@headlessui/react";
 import Image from "next/image";
-import { Fragment, useEffect, useMemo, useState } from "react";
+import { Fragment, useState } from "react";
 
 type Photo = { src: string; alt: string };
 
@@ -10,6 +10,29 @@ interface LightboxProps {
   photos: Photo[];
   index: number;
   onChange: (nextIndex: number) => void;
+}
+
+function LightboxImage({ src, alt }: Photo) {
+  const [imageSrc, setImageSrc] = useState(src);
+  const fallbackSrc = "/photo-portfolio-bg.jpg";
+
+  const handleError = () => {
+    if (imageSrc !== fallbackSrc) {
+      setImageSrc(fallbackSrc);
+    }
+  };
+
+  return (
+    <Image
+      src={imageSrc}
+      alt={alt}
+      fill
+      sizes="(min-width: 1024px) 70vw, 90vw"
+      className="object-contain"
+      priority
+      onError={handleError}
+    />
+  );
 }
 
 export default function Lightbox({
@@ -23,27 +46,6 @@ export default function Lightbox({
   const total = Math.max(photos.length, 1);
   const currentIndex = ((index % total) + total) % total;
   const current = hasPhotos ? photos[currentIndex] : { src: "", alt: "" };
-
-  const resolvedSrc = useMemo(
-    () =>
-      current.src.startsWith("http")
-        ? `/api/proxy-image?url=${encodeURIComponent(current.src)}`
-        : current.src,
-    [current.src]
-  );
-
-  const [imageSrc, setImageSrc] = useState(resolvedSrc);
-  const fallbackSrc = "/photo-portfolio-bg.jpg";
-
-  useEffect(() => {
-    setImageSrc(resolvedSrc);
-  }, [resolvedSrc]);
-
-  const handleError = () => {
-    if (imageSrc !== fallbackSrc) {
-      setImageSrc(fallbackSrc);
-    }
-  };
 
   const goPrev = () => onChange((currentIndex - 1 + total) % total);
   const goNext = () => onChange((currentIndex + 1) % total);
@@ -80,15 +82,7 @@ export default function Lightbox({
             >
               <Dialog.Panel className="relative w-full max-w-4xl overflow-hidden rounded-lg bg-black/30 shadow-xl backdrop-blur">
                 <div className="relative h-[70vh] w-full">
-                  <Image
-                    src={imageSrc}
-                    alt={current.alt}
-                    fill
-                    sizes="(min-width: 1024px) 70vw, 90vw"
-                    className="object-contain"
-                    priority
-                    onError={handleError}
-                  />
+                  <LightboxImage key={current.src} src={current.src} alt={current.alt} />
                 </div>
                 <button
                   type="button"

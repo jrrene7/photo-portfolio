@@ -1,22 +1,14 @@
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 
 interface PhotoCardProps {
   src: string;
   alt: string;
 }
 
-export default function PhotoCard({ src, alt }: PhotoCardProps) {
-  const resolvedSrc = useMemo(
-    () => (src.startsWith("http") ? `/api/proxy-image?url=${encodeURIComponent(src)}` : src),
-    [src]
-  );
-  const [imageSrc, setImageSrc] = useState(resolvedSrc);
+function CardImage({ src, alt }: PhotoCardProps) {
+  const [imageSrc, setImageSrc] = useState(src);
   const fallbackSrc = "/photo-portfolio-bg.jpg";
-
-  useEffect(() => {
-    setImageSrc(resolvedSrc);
-  }, [resolvedSrc]);
 
   const handleError = () => {
     if (imageSrc !== fallbackSrc) {
@@ -37,4 +29,8 @@ export default function PhotoCard({ src, alt }: PhotoCardProps) {
       />
     </div>
   );
+}
+
+export default function PhotoCard({ src, alt }: PhotoCardProps) {
+  return <CardImage key={src} src={src} alt={alt} />;
 }
