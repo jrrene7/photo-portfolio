@@ -1,3 +1,4 @@
+import Script from "next/script";
 import { GeistSans } from "geist/font/sans";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
@@ -19,7 +20,17 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://assets.calendly.com/assets/external/widget.css"
+        />
+      </head>
       <body className={`${GeistSans.variable} antialiased`}>
+        <Script
+          src="https://assets.calendly.com/assets/external/widget.js"
+          strategy="afterInteractive"
+        />
         {children}
       </body>
     </html>

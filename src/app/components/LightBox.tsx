@@ -50,6 +50,19 @@ export default function Lightbox({
   const goPrev = () => onChange((currentIndex - 1 + total) % total);
   const goNext = () => onChange((currentIndex + 1) % total);
 
+  const handleKeyDown: React.KeyboardEventHandler<HTMLDivElement> = (event) => {
+    if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      goPrev();
+    } else if (event.key === "ArrowRight") {
+      event.preventDefault();
+      goNext();
+    } else if (event.key === "Escape") {
+      event.preventDefault();
+      onClose();
+    }
+  };
+
   if (!hasPhotos) {
     return null;
   }
@@ -69,7 +82,10 @@ export default function Lightbox({
           <div className="fixed inset-0 bg-black/80" />
         </Transition.Child>
 
-        <div className="fixed inset-0 overflow-y-auto">
+        <div
+          className="fixed inset-0 overflow-y-auto"
+          onKeyDown={handleKeyDown}
+        >
           <div className="flex min-h-full items-center justify-center p-4 text-center">
             <Transition.Child
               as={Fragment}

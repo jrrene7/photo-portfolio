@@ -17,12 +17,12 @@ You can start editing the page by modifying `src/app/page.tsx`. The page auto-up
 
 This project uses Calendly for booking instead of a custom scheduler.
 
-- Set `NEXT_PUBLIC_CALENDLY_URL` to your public Calendly booking link to enable the homepage embed and CTA.
-- The inline booking UI is rendered directly on the homepage.
+- Set `NEXT_PUBLIC_CALENDLY_URL` to your public Calendly booking link to enable the popup scheduler across the site.
+- The main booking CTA now opens a responsive on-site popup instead of rendering a full embedded page.
 - The webhook receiver lives at `/api/webhooks/calendly`.
 - If you have a Calendly webhook signing key, set `CALENDLY_WEBHOOK_SIGNING_KEY` to validate webhook payloads before processing them.
 
-Calendly’s public API does not handle the booking flow itself; the embed is the correct integration for on-site booking.
+Calendly’s public API does not handle the booking flow itself; the popup/modal integration keeps the booking step lighter while still using Calendly for scheduling.
 
 ## Learn More
 

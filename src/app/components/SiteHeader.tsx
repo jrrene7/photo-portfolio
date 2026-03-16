@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import CalendlyPopupButton from "./CalendlyPopupButton";
 
 const navItems = [
   { href: "/", label: "Portfolio" },
@@ -18,6 +19,7 @@ function navItemClass(isActive: boolean) {
 
 export default function SiteHeader() {
   const pathname = usePathname();
+  const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_URL;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
@@ -57,12 +59,11 @@ export default function SiteHeader() {
         </nav>
 
         <div className="hidden md:block">
-          <Link
-            href="/book"
+          <CalendlyPopupButton
+            url={calendlyUrl}
+            label="Book a session"
             className="rounded-full border border-white/50 px-4 py-2 text-sm text-white transition hover:-translate-y-[1px] hover:border-white hover:bg-white/10 hover:shadow-lg"
-          >
-            Book a session
-          </Link>
+          />
         </div>
 
         <button
@@ -114,15 +115,14 @@ export default function SiteHeader() {
             </nav>
 
             <div className="flex flex-col gap-3">
-              <Link
-                href="/book"
+              <CalendlyPopupButton
+                url={calendlyUrl}
+                label="Open scheduler"
                 className="rounded-full bg-white px-5 py-3 text-center text-sm font-semibold uppercase tracking-[0.18em] text-black"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Open booking
-              </Link>
+                onOpen={() => setIsMenuOpen(false)}
+              />
               <Link
-                href="mailto:hello@renevizion.com"
+                href="mailto:renevision.media@gmail.com"
                 className="rounded-full border border-white/25 px-5 py-3 text-center text-sm font-semibold uppercase tracking-[0.18em] text-white"
                 onClick={() => setIsMenuOpen(false)}
               >

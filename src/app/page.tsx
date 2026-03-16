@@ -2,6 +2,8 @@
 import { useState } from "react";
 import { Tab } from "@headlessui/react";
 import Link from "next/link";
+import CalendlyPopupButton from "./components/CalendlyPopupButton";
+import HomeConversionSections from "./components/HomeConversionSections";
 import PhotoCard from "./components/PhotoCard";
 import Lightbox from "./components/LightBox";
 import SiteHeader from "./components/SiteHeader";
@@ -41,6 +43,7 @@ const fallbackPhotos: Photo[] = [
 ];
 
 export default function Home() {
+  const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_URL;
   const [lightboxList, setLightboxList] = useState<Photo[]>([]);
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [activeTabIndex, setActiveTabIndex] = useState(0);
@@ -76,20 +79,19 @@ export default function Home() {
                     Portraits, editorials, and visual stories with a sharper edge.
                   </h1>
                   <p className="max-w-2xl text-base leading-7 text-stone-200 sm:text-lg">
-                    Explore the portfolio, then move to the dedicated booking page
-                    when you are ready to lock in a session.
+                    Explore the portfolio, then open the scheduler when you are
+                    ready to lock in a session.
                   </p>
                 </div>
 
                 <div className="flex flex-col gap-4 sm:flex-row lg:flex-col lg:items-start">
-                  <Link
-                    href="/book"
+                  <CalendlyPopupButton
+                    url={calendlyUrl}
+                    label="Open scheduler"
                     className="rounded-full bg-white px-5 py-3 text-center text-sm font-semibold uppercase tracking-[0.18em] text-black transition hover:-translate-y-[1px] hover:shadow-xl"
-                  >
-                    Go to booking
-                  </Link>
+                  />
                   <Link
-                    href="mailto:hello@renevizion.com"
+                    href="mailto:renevision.media@gmail.com"
                     className="rounded-full border border-white/35 px-5 py-3 text-center text-sm font-semibold uppercase tracking-[0.18em] text-white transition hover:border-white hover:bg-white/10"
                   >
                     Contact directly
@@ -145,6 +147,8 @@ export default function Home() {
                 })}
               </Tab.Panels>
             </Tab.Group>
+
+            <HomeConversionSections />
           </div>
         </main>
 
