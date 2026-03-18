@@ -5,8 +5,15 @@ import SiteHeader from "../components/SiteHeader";
 import SiteFooter from "../components/SiteFooter";
 
 export const metadata: Metadata = {
-  title: "About | René Vision",
-  description: "Jean-Robert is a portrait and editorial photographer based in [city], creating visual stories with a sharper edge.",
+  title: "About",
+  description:
+    "Jean-Robert is a portrait and editorial photographer based in New York City, creating sharp, intentional visual stories for individuals, couples, and brands.",
+  openGraph: {
+    title: "About | René Vision",
+    description:
+      "Jean-Robert is a portrait and editorial photographer based in New York City, creating sharp, intentional visual stories for individuals, couples, and brands.",
+    url: "https://renevision.net/about",
+  },
 };
 
 export default function AboutPage() {

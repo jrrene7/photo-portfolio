@@ -5,8 +5,15 @@ import SiteHeader from "../components/SiteHeader";
 import SiteFooter from "../components/SiteFooter";
 
 export const metadata: Metadata = {
-  title: "Book | René Vision",
-  description: "Book a photography session with René Vision.",
+  title: "Book a Session",
+  description:
+    "Book a portrait, editorial, headshot, or brand photography session in New York City. Simple scheduling, clear packages, and a process built around you.",
+  openGraph: {
+    title: "Book a Session | René Vision",
+    description:
+      "Book a portrait, editorial, headshot, or brand photography session in New York City.",
+    url: "https://renevision.net/book",
+  },
 };
 
 export default function BookPage() {

@@ -8,7 +8,7 @@ const navLinks = [
 ];
 
 const socialLinks = [
-  { href: "https://instagram.com/renevision.media", label: "Instagram" },
+  { href: "https://instagram.com/rene.vision", label: "Instagram" },
   { href: "mailto:renevision.media@gmail.com", label: "Email" },
 ];
 
