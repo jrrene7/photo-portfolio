@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import CalendlyPopupButton from "../components/CalendlyPopupButton";
 import SiteHeader from "../components/SiteHeader";
+import SiteFooter from "../components/SiteFooter";
 
 export const metadata: Metadata = {
   title: "Book | René Vision",
@@ -143,6 +144,8 @@ export default function BookPage() {
             </div>
           </section>
         </main>
+
+        <SiteFooter />
       </div>
     </div>
   );

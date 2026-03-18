@@ -8,6 +8,7 @@ import CalendlyPopupButton from "./CalendlyPopupButton";
 
 const navItems = [
   { href: "/", label: "Portfolio" },
+  { href: "/about", label: "About" },
   { href: "/book", label: "Booking" },
 ];
 

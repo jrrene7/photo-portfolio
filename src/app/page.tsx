@@ -7,6 +7,7 @@ import HomeConversionSections from "./components/HomeConversionSections";
 import PhotoCard from "./components/PhotoCard";
 import Lightbox from "./components/LightBox";
 import SiteHeader from "./components/SiteHeader";
+import SiteFooter from "./components/SiteFooter";
 
 type TabKey = "all" | "humans" | "nature" | "everything-else";
 
@@ -161,6 +162,8 @@ export default function Home() {
             onChange={setLightboxIndex}
           />
         )}
+
+        <SiteFooter />
       </div>
     </div>
   );
