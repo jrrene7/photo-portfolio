@@ -28,40 +28,66 @@ const packages = [
   {
     name: "Starter",
     price: "$250",
-    badge: "Entry point",
+    badge: "Introductory Session",
     calendlyUrl:
       "https://calendly.com/renevision-media/15-minute-meeting-clone-clone",
     details: [
-      "1-hour session",
-      "5 edited photos",
-      "Online gallery delivery",
-      "Ideal for professional headshots/portraits and social media profile refreshes",
+      "Up to one hour of focused photography in-studio or on location",
+      "Five professionally retouched high-resolution images",
+      "Password-protected online gallery for viewing and downloading your images",
+      "Ideal for individual headshots, personal portraits, or social media profile refreshes",
     ],
   },
   {
     name: "Signature",
     price: "$450",
-    badge: "Most booked",
+    badge: "Most Popular",
     featured: true,
     calendlyUrl:
       "https://calendly.com/renevision-media/30-minute-meeting-clone",
     details: [
-      "2-hour session",
-      "10 edited photos",
-      "Creative planning call",
-      "Best for couples, editorials, and personal brands",
+      "Two hours of creative photography tailored to your vision",
+      "Ten carefully retouched images delivered in high resolution",
+      "Pre-session consultation to plan concepts, outfits, and locations",
+      "Perfect for couples shoots, editorials, or personal brand storytelling",
     ],
   },
   {
     name: "Brand Retainer",
     price: "$900/mo",
-    badge: "Recurring Services",
+    badge: "Ongoing Brand Content",
     calendlyUrl: "https://calendly.com/renevision-media/30min",
     details: [
-      "Monthly content session",
-      "25 edited images each month",
-      "Priority scheduling",
-      "Built for founders, creators, and local businesses",
+      "Monthly content creation session with flexible scheduling",
+      "Twenty-five professionally edited images delivered each month",
+      "Priority booking and personalized creative planning",
+      "Designed for founders, creators, and local businesses needing consistent visuals",
+    ],
+  },
+  {
+    name: "Corporate Headshots",
+    price: "$600",
+    badge: "Professional Teams",
+    calendlyUrl: "https://calendly.com/renevision-media/30min",
+    details: [
+      "On-site session up to 1.5 hours for teams of up to 10 people",
+      "Portable studio lighting and backdrop setup included",
+      "Individually retouched, high-resolution headshots for each team member",
+      "Password-protected online gallery with download and usage rights",
+      "Option to add additional team members for a per-person fee",
+    ],
+  },
+  {
+    name: "Events",
+    price: "$800+",
+    badge: "Event Coverage",
+    calendlyUrl: "https://calendly.com/renevision-media/30min",
+    details: [
+      "Up to three hours of event coverage capturing highlights and candid moments",
+      "Fifty or more expertly edited photos delivered in high resolution",
+      "Pre-event consultation to discuss timeline, key moments, and shot list",
+      "Online gallery for viewing, sharing, and downloading images",
+      "Ideal for corporate events, parties, and special occasions; custom packages available for longer events",
     ],
   },
 ];
@@ -71,7 +97,7 @@ export default function HomeConversionSections() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState("");
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (!email.trim()) {
@@ -79,16 +105,27 @@ export default function HomeConversionSections() {
       return;
     }
 
-    const mailtoHref =
-      "mailto:renevision.media@gmail.com?subject=" +
-      encodeURIComponent("Send me the session prep guide") +
-      "&body=" +
-      encodeURIComponent(
-        `Please send the photo-session prep guide to ${email.trim()}.`
-      );
+    setStatus("Sending…");
 
-    window.location.href = mailtoHref;
-    setStatus("Your email app should open with the guide request.");
+    try {
+      const res = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim() }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setStatus(data.error ?? "Something went wrong. Please try again.");
+        return;
+      }
+
+      setStatus("Done! Check your inbox — the guide is on its way.");
+      setEmail("");
+    } catch {
+      setStatus("Something went wrong. Please try again.");
+    }
   };
 
   return (
@@ -194,9 +231,7 @@ export default function HomeConversionSections() {
               Free guide: how to show up ready for your session.
             </h2>
             <p className="max-w-2xl text-base leading-7 text-stone-200">
-              Request the prep guide for outfit ideas, timing advice, and practical
-              ways to make the most of your shoot. This keeps the call-to-action
-              active now, even before a full email platform is connected.
+              Drop your email and I'll send over the prep guide — outfit ideas, timing advice, and practical ways to make the most of your shoot.
             </p>
           </div>
 
@@ -222,8 +257,7 @@ export default function HomeConversionSections() {
             </button>
 
             <p className="text-sm leading-6 text-stone-300">
-              We respect your inbox. For now, the request opens a direct email so
-              the guide can be sent personally.
+              We respect your inbox. You'll hear back within 24 hours.
             </p>
 
             {status && <p className="text-sm text-white">{status}</p>}
