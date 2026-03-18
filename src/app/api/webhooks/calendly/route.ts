@@ -1,7 +1,7 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
-import { google } from "googleapis";
+import { google, Auth } from "googleapis";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const PHOTOGRAPHER_EMAIL = "renevision.media@gmail.com";
@@ -127,9 +127,11 @@ async function appendToSheet(summary: EventSummary) {
   if (!email || !key || !sheetId) return;
 
   try {
-    const auth = new google.auth.JWT(email, undefined, key, [
-      "https://www.googleapis.com/auth/spreadsheets",
-    ]);
+    const auth = new Auth.JWT({
+      email,
+      key,
+      scopes: ["https://www.googleapis.com/auth/spreadsheets"],
+    });
 
     const sheets = google.sheets({ version: "v4", auth });
 
