@@ -1,5 +1,6 @@
 import Script from "next/script";
 import { GoogleTagManager } from "@next/third-parties/google";
+import PageTransition from "./components/PageTransition";
 import { GeistSans } from "geist/font/sans";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
@@ -66,7 +67,7 @@ export default function RootLayout({
           src="https://assets.calendly.com/assets/external/widget.js"
           strategy="lazyOnload"
         />
-        {children}
+        <PageTransition>{children}</PageTransition>
       </body>
       <GoogleTagManager gtmId="GTM-TP9CLLQH" />
     </html>

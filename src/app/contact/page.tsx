@@ -40,6 +40,9 @@ export default function ContactPage() {
         return;
       }
 
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
       setStatus("done");
     } catch {
       setErrorMsg("Something went wrong. Please try again.");
