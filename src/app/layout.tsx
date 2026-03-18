@@ -1,4 +1,5 @@
 import Script from "next/script";
+import { GoogleTagManager } from "@next/third-parties/google";
 import { GeistSans } from "geist/font/sans";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
@@ -66,19 +67,8 @@ export default function RootLayout({
           strategy="lazyOnload"
         />
         {children}
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-WTTRHDXBXB"
-          strategy="afterInteractive"
-        />
-        <Script id="gtag-init" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-WTTRHDXBXB');
-          `}
-        </Script>
       </body>
+      <GoogleTagManager gtmId="GTM-TP9CLLQH" />
     </html>
   );
 }
