@@ -1,5 +1,10 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { NextResponse } from "next/server";
+import { Resend } from "resend";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+const PHOTOGRAPHER_EMAIL = "renevision.media@gmail.com";
+const FROM_EMAIL = process.env.RESEND_FROM_EMAIL ?? "onboarding@resend.dev";
 
 export const runtime = "nodejs";
 
@@ -98,6 +103,52 @@ function summarizeEvent(data: CalendlyWebhookPayload) {
   };
 }
 
+type EventSummary = ReturnType<typeof summarizeEvent>;
+
+function formatTime(iso: string | null) {
+  if (!iso) return "—";
+  return new Date(iso).toLocaleString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    timeZoneName: "short",
+  });
+}
+
+async function sendBookingNotification(summary: EventSummary) {
+  const isCancel = summary.event === "invitee.canceled";
+  const subject = isCancel
+    ? `Booking cancelled — ${summary.inviteeName ?? summary.inviteeEmail}`
+    : `New booking — ${summary.inviteeName ?? summary.inviteeEmail}`;
+
+  const html = `
+    <h2 style="margin:0 0 16px">${isCancel ? "❌ Booking Cancelled" : "✅ New Booking"}</h2>
+    <table style="border-collapse:collapse;font-family:sans-serif;font-size:14px">
+      <tr><td style="padding:4px 12px 4px 0;color:#666">Name</td><td><strong>${summary.inviteeName ?? "—"}</strong></td></tr>
+      <tr><td style="padding:4px 12px 4px 0;color:#666">Email</td><td>${summary.inviteeEmail ?? "—"}</td></tr>
+      <tr><td style="padding:4px 12px 4px 0;color:#666">Session</td><td>${summary.eventTypeName ?? summary.scheduledEventName ?? "—"}</td></tr>
+      <tr><td style="padding:4px 12px 4px 0;color:#666">Starts</td><td>${formatTime(summary.startsAt)}</td></tr>
+      <tr><td style="padding:4px 12px 4px 0;color:#666">Ends</td><td>${formatTime(summary.endsAt)}</td></tr>
+      <tr><td style="padding:4px 12px 4px 0;color:#666">Timezone</td><td>${summary.inviteeTimezone ?? "—"}</td></tr>
+      <tr><td style="padding:4px 12px 4px 0;color:#666">Status</td><td>${summary.inviteeStatus ?? "—"}</td></tr>
+    </table>
+  `;
+
+  try {
+    await resend.emails.send({
+      from: FROM_EMAIL,
+      to: PHOTOGRAPHER_EMAIL,
+      subject,
+      html,
+    });
+  } catch (err) {
+    console.error("[calendly webhook] failed to send notification email", err);
+  }
+}
+
 export async function GET() {
   return NextResponse.json({
     ok: true,
@@ -138,11 +189,7 @@ export async function POST(request: Request) {
 
   console.log("Calendly webhook received", summary);
 
-  return NextResponse.json({
-    ok: true,
-    received: summary,
-    note:
-      "Persist this event or trigger downstream actions here after connecting your datastore or CRM.",
-    signatureVerified: Boolean(signingKey),
-  });
+  await sendBookingNotification(summary);
+
+  return NextResponse.json({ ok: true, received: summary, signatureVerified: Boolean(signingKey) });
 }
