@@ -1,10 +1,10 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Tab, TabGroup, TabList, TabPanels, TabPanel } from "@headlessui/react";
 import Link from "next/link";
+import { CldImage } from "next-cloudinary";
 import CalendlyPopupButton from "./components/CalendlyPopupButton";
 import HomeConversionSections from "./components/HomeConversionSections";
-import PhotoCard from "./components/PhotoCard";
 import Lightbox from "./components/LightBox";
 import SiteHeader from "./components/SiteHeader";
 import SiteFooter from "./components/SiteFooter";
@@ -20,44 +20,31 @@ const tabs: { key: TabKey; display: string }[] = [
 ];
 
 type Photo = {
-  src: string;
+  publicId: string;
   alt: string;
-  category: Exclude<TabKey, "all">;
+  tags: string[];
 };
-
-const fallbackPhotos: Photo[] = [
-  {
-    src: "/photo-portfolio-bg.jpg",
-    alt: "Portrait with red scarf",
-    category: "portraits",
-  },
-  {
-    src: "/photo-portfolio-bg-2.jpg",
-    alt: "Woman seated on floor",
-    category: "events",
-  },
-  { src: "/bgImg.jpg", alt: "Model leaning against wall", category: "brands" },
-  {
-    src: "/photo-portfolio-bg-2.jpg",
-    alt: "Editorial pose",
-    category: "misc",
-  },
-];
 
 export default function Home() {
   const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_URL;
+  const [photos, setPhotos] = useState<Photo[]>([]);
+  const [loading, setLoading] = useState(true);
   const [lightboxList, setLightboxList] = useState<Photo[]>([]);
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [activeTabIndex, setActiveTabIndex] = useState(0);
 
-  const handleCloseLightbox = () => {
-    setLightboxList([]);
-  };
+  useEffect(() => {
+    fetch("/api/photos")
+      .then((r) => r.json())
+      .then((data) => setPhotos(data))
+      .catch(() => setPhotos([]))
+      .finally(() => setLoading(false));
+  }, []);
 
   const filteredPhotos = (tabKey: TabKey) =>
     tabKey === "all"
-      ? fallbackPhotos
-      : fallbackPhotos.filter((photo) => photo.category === tabKey);
+      ? photos
+      : photos.filter((p) => p.tags.includes(tabKey));
 
   const openFromTab = (list: Photo[], index: number) => {
     setLightboxList(list);
@@ -78,8 +65,7 @@ export default function Home() {
                     René Vision
                   </p>
                   <h1 className="font-display text-4xl leading-none text-white sm:text-5xl lg:text-6xl">
-                    Portraits, editorials, and visual stories with a sharper
-                    edge.
+                    Portraits, editorials, and visual stories with a sharper edge.
                   </h1>
                   <p className="max-w-2xl text-base leading-7 text-stone-200 sm:text-lg">
                     Explore the portfolio, then open the scheduler when you are
@@ -104,10 +90,7 @@ export default function Home() {
             </section>
 
             <section className="w-full rounded-[2rem] border border-white/10 bg-black/25 p-6 shadow-2xl backdrop-blur sm:p-8">
-              <TabGroup
-                selectedIndex={activeTabIndex}
-                onChange={setActiveTabIndex}
-              >
+              <TabGroup selectedIndex={activeTabIndex} onChange={setActiveTabIndex}>
                 <TabList className="mb-8 flex flex-wrap items-center justify-center gap-4 sm:gap-8">
                   {tabs.map((tab) => (
                     <Tab key={tab.key}>
@@ -131,22 +114,33 @@ export default function Home() {
                     const list = filteredPhotos(tab.key);
                     return (
                       <TabPanel key={tab.key}>
-                        {list.length === 0 ? (
-                          <p className="text-center text-stone-200">
-                            No photos yet.
-                          </p>
+                        {loading ? (
+                          <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
+                            {Array.from({ length: 8 }).map((_, i) => (
+                              <div key={i} className="aspect-square w-full animate-pulse rounded-2xl bg-white/10" />
+                            ))}
+                          </div>
+                        ) : list.length === 0 ? (
+                          <p className="text-center text-stone-200">No photos yet.</p>
                         ) : (
                           <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
                             {list.map((photo, index) => (
                               <button
                                 type="button"
-                                key={`${photo.alt}-${index}`}
-                                className="group rounded-2xl bg-gradient-to-br from-white/40 via-white/20 to-white/5 p-[3px] shadow-xl transition hover:scale-[1.02] hover:shadow-2xl"
+                                key={photo.publicId}
+                                className="group aspect-square overflow-hidden rounded-2xl bg-white/5 shadow-xl transition hover:scale-[1.02] hover:shadow-2xl"
                                 onClick={() => openFromTab(list, index)}
                               >
-                                <div className="rounded-2xl bg-black/60 p-1.5">
-                                  <PhotoCard src={photo.src} alt={photo.alt} />
-                                </div>
+                                <CldImage
+                                  src={photo.publicId}
+                                  alt={photo.alt}
+                                  width={400}
+                                  height={400}
+                                  crop="fill"
+                                  gravity="auto"
+                                  loading={index === 0 ? "eager" : "lazy"}
+                                  className="h-full w-full object-cover transition-opacity duration-500"
+                                />
                               </button>
                             ))}
                           </div>
@@ -165,7 +159,7 @@ export default function Home() {
         {lightboxList.length > 0 && (
           <Lightbox
             isOpen
-            onClose={handleCloseLightbox}
+            onClose={() => setLightboxList([])}
             photos={lightboxList}
             index={lightboxIndex}
             onChange={setLightboxIndex}

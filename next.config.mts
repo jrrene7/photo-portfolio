@@ -20,6 +20,7 @@ const connectSrc = [
   "https://www.google-analytics.com",
   "https://analytics.google.com",
   "https://region1.google-analytics.com",
+  "https://res.cloudinary.com",
   ...(isDevelopment ? ["ws:", "wss:", "http://localhost:*", "http://127.0.0.1:*"] : []),
 ].join(" ");
 
