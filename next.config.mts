@@ -6,6 +6,8 @@ const scriptSrc = [
   "'self'",
   "'unsafe-inline'",
   "https://assets.calendly.com",
+  "https://www.googletagmanager.com",
+  "https://www.google-analytics.com",
   ...(isDevelopment ? ["'unsafe-eval'"] : []),
 ].join(" ");
 
@@ -14,6 +16,10 @@ const connectSrc = [
   "https://calendly.com",
   "https://api.calendly.com",
   "https://assets.calendly.com",
+  "https://www.googletagmanager.com",
+  "https://www.google-analytics.com",
+  "https://analytics.google.com",
+  "https://region1.google-analytics.com",
   ...(isDevelopment ? ["ws:", "wss:", "http://localhost:*", "http://127.0.0.1:*"] : []),
 ].join(" ");
 
@@ -36,7 +42,7 @@ const contentSecurityPolicy = [
 
 const nextConfig: NextConfig = {
   images: {
-    unoptimized: true,
+    formats: ["image/avif", "image/webp"],
   },
   async headers() {
     const securityHeaders = [
