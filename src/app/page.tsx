@@ -9,13 +9,14 @@ import Lightbox from "./components/LightBox";
 import SiteHeader from "./components/SiteHeader";
 import SiteFooter from "./components/SiteFooter";
 
-type TabKey = "all" | "humans" | "nature" | "everything-else";
+type TabKey = "all" | "portraits" | "events" | "brands" | "misc";
 
 const tabs: { key: TabKey; display: string }[] = [
   { key: "all", display: "All" },
-  { key: "humans", display: "Humans" },
-  { key: "nature", display: "Nature" },
-  { key: "everything-else", display: "Everything Else" },
+  { key: "portraits", display: "Portraits" },
+  { key: "events", display: "Events" },
+  { key: "brands", display: "Brands" },
+  { key: "misc", display: "Miscellaneous" },
 ];
 
 type Photo = {
@@ -28,18 +29,18 @@ const fallbackPhotos: Photo[] = [
   {
     src: "/photo-portfolio-bg.jpg",
     alt: "Portrait with red scarf",
-    category: "humans",
+    category: "portraits",
   },
   {
     src: "/photo-portfolio-bg-2.jpg",
     alt: "Woman seated on floor",
-    category: "humans",
+    category: "events",
   },
-  { src: "/bgImg.jpg", alt: "Model leaning against wall", category: "humans" },
+  { src: "/bgImg.jpg", alt: "Model leaning against wall", category: "brands" },
   {
     src: "/photo-portfolio-bg-2.jpg",
     alt: "Editorial pose",
-    category: "everything-else",
+    category: "misc",
   },
 ];
 
@@ -77,7 +78,8 @@ export default function Home() {
                     René Vision
                   </p>
                   <h1 className="font-display text-4xl leading-none text-white sm:text-5xl lg:text-6xl">
-                    Portraits, editorials, and visual stories with a sharper edge.
+                    Portraits, editorials, and visual stories with a sharper
+                    edge.
                   </h1>
                   <p className="max-w-2xl text-base leading-7 text-stone-200 sm:text-lg">
                     Explore the portfolio, then open the scheduler when you are
@@ -102,7 +104,10 @@ export default function Home() {
             </section>
 
             <section className="w-full rounded-[2rem] border border-white/10 bg-black/25 p-6 shadow-2xl backdrop-blur sm:p-8">
-              <TabGroup selectedIndex={activeTabIndex} onChange={setActiveTabIndex}>
+              <TabGroup
+                selectedIndex={activeTabIndex}
+                onChange={setActiveTabIndex}
+              >
                 <TabList className="mb-8 flex flex-wrap items-center justify-center gap-4 sm:gap-8">
                   {tabs.map((tab) => (
                     <Tab key={tab.key}>
@@ -127,7 +132,9 @@ export default function Home() {
                     return (
                       <TabPanel key={tab.key}>
                         {list.length === 0 ? (
-                          <p className="text-center text-stone-200">No photos yet.</p>
+                          <p className="text-center text-stone-200">
+                            No photos yet.
+                          </p>
                         ) : (
                           <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
                             {list.map((photo, index) => (

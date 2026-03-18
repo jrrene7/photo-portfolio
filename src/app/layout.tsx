@@ -43,8 +43,8 @@ export const metadata: Metadata = {
     images: ["/my-portrait.png"],
   },
   icons: {
-    icon: "/renevision-logo-white.png",
-    apple: "/renevision-logo-white.png",
+    icon: "/my-portrait.png",
+    apple: "/my-portrait.png",
   },
 };
 
