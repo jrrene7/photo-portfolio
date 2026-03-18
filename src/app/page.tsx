@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Tab } from "@headlessui/react";
+import { Tab, TabGroup, TabList, TabPanels, TabPanel } from "@headlessui/react";
 import Link from "next/link";
 import CalendlyPopupButton from "./components/CalendlyPopupButton";
 import HomeConversionSections from "./components/HomeConversionSections";
@@ -64,7 +64,7 @@ export default function Home() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-[url('/photo-portfolio-bg-2.jpg')] bg-top bg-cover">
+    <div className="flex min-h-screen flex-col bg-[url('/photo-portfolio-bg-2.jpg')] bg-top bg-cover bg-fixed">
       <div className="min-h-screen bg-gradient-to-b from-black/70 via-black/60 to-black/75">
         <SiteHeader />
 
@@ -92,7 +92,7 @@ export default function Home() {
                     className="rounded-full bg-white px-5 py-3 text-center text-sm font-semibold uppercase tracking-[0.18em] text-black transition hover:-translate-y-[1px] hover:shadow-xl"
                   />
                   <Link
-                    href="mailto:renevision.media@gmail.com"
+                    href="/contact"
                     className="rounded-full border border-white/35 px-5 py-3 text-center text-sm font-semibold uppercase tracking-[0.18em] text-white transition hover:border-white hover:bg-white/10"
                   >
                     Contact directly
@@ -101,53 +101,55 @@ export default function Home() {
               </div>
             </section>
 
-            <Tab.Group selectedIndex={activeTabIndex} onChange={setActiveTabIndex}>
-              <Tab.List className="mb-8 flex flex-wrap items-center justify-center gap-4 sm:gap-8">
-                {tabs.map((tab) => (
-                  <Tab key={tab.key}>
-                    {({ selected }) => (
-                      <span
-                        className={
-                          selected
-                            ? "font-display border-b-2 border-white pb-1 text-lg text-white sm:text-xl"
-                            : "text-sm text-stone-200 transition hover:text-white sm:text-base"
-                        }
-                      >
-                        {tab.display}
-                      </span>
-                    )}
-                  </Tab>
-                ))}
-              </Tab.List>
+            <section className="w-full rounded-[2rem] border border-white/10 bg-black/25 p-6 shadow-2xl backdrop-blur sm:p-8">
+              <TabGroup selectedIndex={activeTabIndex} onChange={setActiveTabIndex}>
+                <TabList className="mb-8 flex flex-wrap items-center justify-center gap-4 sm:gap-8">
+                  {tabs.map((tab) => (
+                    <Tab key={tab.key}>
+                      {({ selected }) => (
+                        <span
+                          className={
+                            selected
+                              ? "font-display border-b-2 border-white pb-1 text-lg text-white sm:text-xl"
+                              : "text-sm text-stone-200 transition hover:text-white sm:text-base"
+                          }
+                        >
+                          {tab.display}
+                        </span>
+                      )}
+                    </Tab>
+                  ))}
+                </TabList>
 
-              <Tab.Panels className="w-full">
-                {tabs.map((tab) => {
-                  const list = filteredPhotos(tab.key);
-                  return (
-                    <Tab.Panel key={tab.key}>
-                      <div className="flex flex-wrap justify-center gap-5 sm:gap-8">
+                <TabPanels className="w-full">
+                  {tabs.map((tab) => {
+                    const list = filteredPhotos(tab.key);
+                    return (
+                      <TabPanel key={tab.key}>
                         {list.length === 0 ? (
-                          <p className="text-stone-200">No photos yet.</p>
+                          <p className="text-center text-stone-200">No photos yet.</p>
                         ) : (
-                          list.map((photo, index) => (
-                            <button
-                              type="button"
-                              key={`${photo.alt}-${index}`}
-                              className="group rounded-3xl bg-gradient-to-br from-white/40 via-white/20 to-white/5 p-[3px] shadow-xl transition hover:scale-[1.02] hover:shadow-2xl"
-                              onClick={() => openFromTab(list, index)}
-                            >
-                              <div className="rounded-3xl bg-black/60 p-2">
-                                <PhotoCard src={photo.src} alt={photo.alt} />
-                              </div>
-                            </button>
-                          ))
+                          <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
+                            {list.map((photo, index) => (
+                              <button
+                                type="button"
+                                key={`${photo.alt}-${index}`}
+                                className="group rounded-2xl bg-gradient-to-br from-white/40 via-white/20 to-white/5 p-[3px] shadow-xl transition hover:scale-[1.02] hover:shadow-2xl"
+                                onClick={() => openFromTab(list, index)}
+                              >
+                                <div className="rounded-2xl bg-black/60 p-1.5">
+                                  <PhotoCard src={photo.src} alt={photo.alt} />
+                                </div>
+                              </button>
+                            ))}
+                          </div>
                         )}
-                      </div>
-                    </Tab.Panel>
-                  );
-                })}
-              </Tab.Panels>
-            </Tab.Group>
+                      </TabPanel>
+                    );
+                  })}
+                </TabPanels>
+              </TabGroup>
+            </section>
 
             <HomeConversionSections />
           </div>

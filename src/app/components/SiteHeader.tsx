@@ -10,6 +10,7 @@ const navItems = [
   { href: "/", label: "Portfolio" },
   { href: "/about", label: "About" },
   { href: "/book", label: "Booking" },
+  { href: "/contact", label: "Contact" },
 ];
 
 function navItemClass(isActive: boolean) {

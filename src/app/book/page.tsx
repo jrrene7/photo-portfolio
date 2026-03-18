@@ -20,7 +20,7 @@ export default function BookPage() {
   const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_URL;
 
   return (
-    <div className="flex min-h-screen flex-col bg-[url('/photo-portfolio-bg.jpg')] bg-center bg-cover">
+    <div className="flex min-h-screen flex-col bg-[url('/photo-portfolio-bg.jpg')] bg-center bg-cover bg-fixed">
       <div className="min-h-screen bg-gradient-to-b from-black/75 via-black/65 to-black/80">
         <SiteHeader />
 
@@ -132,7 +132,7 @@ export default function BookPage() {
                       When will I receive images?
                     </p>
                     <p className="mt-1">
-                      A typical turnaround is 2–3 weeks for fully edited galleries.
+                      A typical turnaround is 1-2 weeks for fully edited galleries.
                       If you need a rush delivery, mention it in your booking notes.
                     </p>
                   </div>

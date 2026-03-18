@@ -1,6 +1,7 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
+import { google } from "googleapis";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const PHOTOGRAPHER_EMAIL = "renevision.media@gmail.com";
@@ -118,6 +119,43 @@ function formatTime(iso: string | null) {
   });
 }
 
+async function appendToSheet(summary: EventSummary) {
+  const email = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
+  const key = process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n");
+  const sheetId = process.env.GOOGLE_SHEET_ID;
+
+  if (!email || !key || !sheetId) return;
+
+  try {
+    const auth = new google.auth.JWT(email, undefined, key, [
+      "https://www.googleapis.com/auth/spreadsheets",
+    ]);
+
+    const sheets = google.sheets({ version: "v4", auth });
+
+    await sheets.spreadsheets.values.append({
+      spreadsheetId: sheetId,
+      range: "Sheet1!A:I",
+      valueInputOption: "USER_ENTERED",
+      requestBody: {
+        values: [[
+          new Date().toISOString(),
+          summary.event ?? "",
+          summary.inviteeName ?? "",
+          summary.inviteeEmail ?? "",
+          summary.inviteeTimezone ?? "",
+          summary.eventTypeName ?? "",
+          formatTime(summary.startsAt),
+          formatTime(summary.endsAt),
+          summary.inviteeStatus ?? "",
+        ]],
+      },
+    });
+  } catch (err) {
+    console.error("[calendly webhook] failed to append to sheet", err);
+  }
+}
+
 async function sendBookingNotification(summary: EventSummary) {
   const isCancel = summary.event === "invitee.canceled";
   const subject = isCancel
@@ -189,7 +227,10 @@ export async function POST(request: Request) {
 
   console.log("Calendly webhook received", summary);
 
-  await sendBookingNotification(summary);
+  await Promise.all([
+    sendBookingNotification(summary),
+    appendToSheet(summary),
+  ]);
 
   return NextResponse.json({ ok: true, received: summary, signatureVerified: Boolean(signingKey) });
 }

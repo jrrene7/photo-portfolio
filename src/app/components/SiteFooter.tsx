@@ -5,6 +5,7 @@ const navLinks = [
   { href: "/", label: "Portfolio" },
   { href: "/about", label: "About" },
   { href: "/book", label: "Booking" },
+  { href: "/contact", label: "Contact" },
 ];
 
 const socialLinks = [
