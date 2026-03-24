@@ -11,7 +11,7 @@ const baseUrl = "https://renevision.net";
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default: "René Vision | NYC Portrait & Editorial Photographer",
+    default: "René Vision | NYC Photographer",
     template: "%s | René Vision",
   },
   description:
