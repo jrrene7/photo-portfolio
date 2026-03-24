@@ -77,10 +77,10 @@ export default function ContactPage() {
               <div className="space-y-3 rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5">
                 <p className="text-xs uppercase tracking-[0.26em] text-stone-300">Or reach out directly</p>
                 <a
-                  href="mailto:renevision.media@gmail.com"
+                  href="mailto:j-r@renevision.net"
                   className="block text-sm text-stone-200 transition hover:text-white"
                 >
-                  renevision.media@gmail.com
+                  j-r@renevision.net
                 </a>
                 <a
                   href="https://instagram.com/rene.vision"

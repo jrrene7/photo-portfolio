@@ -71,7 +71,7 @@ export default function BookPage() {
                   className="w-full rounded-full bg-white px-5 py-3 text-center text-sm font-semibold uppercase tracking-[0.18em] text-black transition hover:-translate-y-[1px] hover:shadow-xl sm:w-auto"
                 />
                 <Link
-                  href="mailto:renevision.media@gmail.com"
+                  href="mailto:j-r@renevision.net"
                   className="w-full rounded-full border border-white/35 px-5 py-3 text-center text-sm font-semibold uppercase tracking-[0.18em] text-white transition hover:border-white hover:bg-white/10 sm:w-auto"
                 >
                   Ask a question first

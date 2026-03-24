@@ -10,7 +10,7 @@ const navLinks = [
 
 const socialLinks = [
   { href: "https://instagram.com/rene.vision", label: "Instagram" },
-  { href: "mailto:renevision.media@gmail.com", label: "Email" },
+  { href: "mailto:j-r@renevision.net", label: "Email" },
 ];
 
 export default function SiteFooter() {

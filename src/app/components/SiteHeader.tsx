@@ -124,7 +124,7 @@ export default function SiteHeader() {
                 onOpen={() => setIsMenuOpen(false)}
               />
               <Link
-                href="mailto:renevision.media@gmail.com"
+                href="mailto:j-r@renevision.net"
                 className="rounded-full border border-white/25 px-5 py-3 text-center text-sm font-semibold uppercase tracking-[0.18em] text-white"
                 onClick={() => setIsMenuOpen(false)}
               >
