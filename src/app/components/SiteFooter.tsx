@@ -18,7 +18,7 @@ export default function SiteFooter() {
     <footer className="border-t border-white/10 bg-black/30 backdrop-blur-xl">
       <div className="mx-auto flex max-w-6xl flex-col gap-8 px-5 py-10 sm:px-6 md:px-8">
         <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
-          <Link href="/" className="flex items-center gap-3">
+          <Link href="/" className="flex flex-col gap-2">
             <Image
               src="/renevision-logo-white.png"
               alt="René Vision logo"
@@ -26,6 +26,7 @@ export default function SiteFooter() {
               height={2421}
               className="h-auto w-[110px] object-contain opacity-90"
             />
+            <p className="text-xs text-stone-500">Based in NYC. Shooting worldwide.</p>
           </Link>
 
           <nav className="flex flex-wrap gap-x-8 gap-y-3">

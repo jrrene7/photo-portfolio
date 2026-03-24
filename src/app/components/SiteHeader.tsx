@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -13,127 +13,142 @@ const navItems = [
   { href: "/contact", label: "Contact" },
 ];
 
-function navItemClass(isActive: boolean) {
-  return isActive
-    ? "text-white"
-    : "text-stone-300 transition hover:text-white";
-}
-
 export default function SiteHeader() {
   const pathname = usePathname();
   const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_URL;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Lock body scroll when menu is open
+  useEffect(() => {
+    document.body.style.overflow = isMenuOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [isMenuOpen]);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-white/15 bg-black/30 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-4 sm:px-6 md:px-8">
-        <Link
-          href="/"
-          className="flex items-center gap-3"
-          onClick={() => setIsMenuOpen(false)}
-        >
-          <Image
-            src="/renevision-logo-white.png"
-            alt="René Vision logo"
-            width={3510}
-            height={2421}
-            className="h-auto w-[124px] object-contain sm:w-[150px]"
-            priority
-          />
-          <span className="hidden font-display text-xs uppercase tracking-[0.32em] text-stone-200 sm:inline">
-            Photography
-          </span>
-        </Link>
+    <>
+      <header
+        className={`fixed inset-x-0 top-0 z-40 transition-all duration-300 ${
+          scrolled
+            ? "bg-black/50 backdrop-blur-xl"
+            : "bg-transparent backdrop-blur-sm"
+        }`}
+      >
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-2.5 sm:px-6 md:px-8">
+          {/* Logo */}
+          <Link href="/" onClick={() => setIsMenuOpen(false)}>
+            <Image
+              src="/renevision-logo-white.png"
+              alt="René Vision"
+              width={3510}
+              height={2421}
+              className="h-auto w-[110px] object-contain sm:w-[130px]"
+              priority
+            />
+          </Link>
 
-        <nav className="hidden items-center gap-8 md:flex">
+          {/* Desktop nav */}
+          <nav className="hidden items-center gap-7 md:flex">
+            {navItems.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`text-sm transition-colors duration-200 ${
+                    isActive
+                      ? "text-white"
+                      : "text-stone-400 hover:text-white"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
+
+          {/* Desktop CTA */}
+          <div className="hidden md:block">
+            <CalendlyPopupButton
+              url={calendlyUrl}
+              label="Book"
+              className="rounded-full border border-white/30 px-4 py-2 text-sm text-white transition hover:border-white hover:bg-white/10"
+            />
+          </div>
+
+          {/* Mobile menu toggle */}
+          <button
+            type="button"
+            className="relative z-50 p-1 text-white md:hidden"
+            aria-expanded={isMenuOpen}
+            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+            onClick={() => setIsMenuOpen((v) => !v)}
+          >
+            <svg
+              className="h-6 w-6 transition-all"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              {isMenuOpen ? (
+                <path d="M6 6l12 12M18 6l-12 12" />
+              ) : (
+                <path d="M4 8h16M4 16h16" />
+              )}
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      {/* Mobile overlay */}
+      <div
+        className={`fixed inset-0 z-30 flex flex-col bg-black/95 backdrop-blur-xl transition-all duration-300 md:hidden ${
+          isMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        }`}
+      >
+        <div className="flex flex-1 flex-col items-center justify-center gap-8 px-8">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`font-display text-sm uppercase tracking-[0.22em] ${navItemClass(isActive)}`}
+                onClick={() => setIsMenuOpen(false)}
+                className={`font-display text-3xl transition-colors ${
+                  isActive ? "text-white" : "text-stone-400 hover:text-white"
+                }`}
               >
                 {item.label}
               </Link>
             );
           })}
-        </nav>
+        </div>
 
-        <div className="hidden md:block">
+        <div className="flex flex-col gap-3 px-8 pb-12">
           <CalendlyPopupButton
             url={calendlyUrl}
-            label="Book a session"
-            className="rounded-full border border-white/50 px-4 py-2 text-sm text-white transition hover:-translate-y-[1px] hover:border-white hover:bg-white/10 hover:shadow-lg"
+            label="Open scheduler"
+            className="rounded-full bg-white px-5 py-4 text-center text-sm font-semibold uppercase tracking-[0.18em] text-black"
+            onOpen={() => setIsMenuOpen(false)}
           />
-        </div>
-
-        <button
-          type="button"
-          className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/5 p-3 text-white transition hover:border-white/40 hover:bg-white/10 md:hidden"
-          aria-expanded={isMenuOpen}
-          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-          onClick={() => setIsMenuOpen((value) => !value)}
-        >
-          <svg
-            className="h-5 w-5"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.75"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+          <Link
+            href="mailto:j-r@renevision.net"
+            className="rounded-full border border-white/20 px-5 py-4 text-center text-sm font-semibold uppercase tracking-[0.18em] text-white"
+            onClick={() => setIsMenuOpen(false)}
           >
-            {isMenuOpen ? (
-              <path d="M6 6l12 12M18 6l-12 12" />
-            ) : (
-              <path d="M4 7h16M4 12h16M4 17h16" />
-            )}
-          </svg>
-        </button>
-      </div>
-
-      {isMenuOpen && (
-        <div className="border-t border-white/10 bg-black/75 px-5 py-5 backdrop-blur-xl md:hidden">
-          <div className="mx-auto flex max-w-6xl flex-col gap-5">
-            <nav className="flex flex-col gap-3">
-              {navItems.map((item) => {
-                const isActive = pathname === item.href;
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={`rounded-2xl border px-4 py-3 font-display text-sm uppercase tracking-[0.22em] ${
-                      isActive
-                        ? "border-white/40 bg-white/10 text-white"
-                        : "border-white/10 bg-white/[0.03] text-stone-200"
-                    }`}
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {item.label}
-                  </Link>
-                );
-              })}
-            </nav>
-
-            <div className="flex flex-col gap-3">
-              <CalendlyPopupButton
-                url={calendlyUrl}
-                label="Open scheduler"
-                className="rounded-full bg-white px-5 py-3 text-center text-sm font-semibold uppercase tracking-[0.18em] text-black"
-                onOpen={() => setIsMenuOpen(false)}
-              />
-              <Link
-                href="mailto:j-r@renevision.net"
-                className="rounded-full border border-white/25 px-5 py-3 text-center text-sm font-semibold uppercase tracking-[0.18em] text-white"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Email instead
-              </Link>
-            </div>
-          </div>
+            Email instead
+          </Link>
         </div>
-      )}
-    </header>
+      </div>
+    </>
   );
 }

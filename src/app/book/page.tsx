@@ -7,11 +7,11 @@ import SiteFooter from "../components/SiteFooter";
 export const metadata: Metadata = {
   title: "Book a Session",
   description:
-    "Book a portrait, editorial, headshot, or brand photography session in New York City. Simple scheduling, clear packages, and a process built around you.",
+    "Book a portrait, special event, editorial, headshot, or brand photography session. Based in New York, shooting worldwide. Simple scheduling, clear packages, and a process built around you.",
   openGraph: {
     title: "Book a Session | René Vision",
     description:
-      "Book a portrait, editorial, headshot, or brand photography session in New York City.",
+      "Book a portrait, sepcial event, editorial, headshot, or brand photography session. Based in New York, shooting worldwide.",
     url: "https://renevision.net/book",
   },
 };
@@ -20,9 +20,8 @@ export default function BookPage() {
   const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_URL;
 
   return (
-    <div className="flex min-h-screen flex-col bg-[url('/photo-portfolio-bg.jpg')] bg-center bg-cover bg-fixed">
-      <div className="min-h-screen bg-gradient-to-b from-black/75 via-black/65 to-black/80">
-        <SiteHeader />
+    <div className="flex min-h-screen flex-col">
+      <SiteHeader />
 
         <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-10 px-5 py-8 sm:px-6 sm:py-10 md:px-8 md:py-12">
           <section className="grid gap-10 rounded-[2rem] border border-white/10 bg-black/30 p-6 shadow-2xl backdrop-blur lg:grid-cols-[1.1fr_0.9fr] lg:p-8">
@@ -93,7 +92,7 @@ export default function BookPage() {
                 <ul className="space-y-2 text-sm leading-6 text-stone-200">
                   <li>
                     <span className="font-semibold text-white">Session types:</span>{" "}
-                    portraits, couples, small editorial stories, and brand sessions.
+                    portraits, couples, travel, editorial stories, and brand sessions.
                   </li>
                   <li>
                     <span className="font-semibold text-white">Location:</span>{" "}
@@ -153,7 +152,6 @@ export default function BookPage() {
         </main>
 
         <SiteFooter />
-      </div>
     </div>
   );
 }

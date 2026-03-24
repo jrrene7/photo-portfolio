@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { Tab, TabGroup, TabList, TabPanels, TabPanel } from "@headlessui/react";
+import Image from "next/image";
 import Link from "next/link";
 import { CldImage } from "next-cloudinary";
 import CalendlyPopupButton from "./components/CalendlyPopupButton";
@@ -52,8 +53,7 @@ export default function Home() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-[url('/photo-portfolio-bg-2.jpg')] bg-top bg-cover bg-fixed">
-      <div className="min-h-screen bg-gradient-to-b from-black/70 via-black/60 to-black/75">
+    <div className="flex min-h-screen flex-col">
         <SiteHeader />
 
         <main className="grow">
@@ -65,26 +65,39 @@ export default function Home() {
                     René Vision
                   </p>
                   <h1 className="font-display text-4xl leading-none text-white sm:text-5xl lg:text-6xl">
-                    Portraits, editorials, and visual stories with a sharper edge.
+                    Portraits, special events, and travel stories with a sharper edge.
                   </h1>
                   <p className="max-w-2xl text-base leading-7 text-stone-200 sm:text-lg">
-                    Explore the portfolio, then open the scheduler when you are
-                    ready to lock in a session.
+                    Based in New York City, to a city near you. Explore the portfolio
+                    and book when you're ready to lock in.
                   </p>
                 </div>
 
-                <div className="flex flex-col gap-4 sm:flex-row lg:flex-col lg:items-start">
-                  <CalendlyPopupButton
-                    url={calendlyUrl}
-                    label="Open scheduler"
-                    className="rounded-full bg-white px-5 py-3 text-center text-sm font-semibold uppercase tracking-[0.18em] text-black transition hover:-translate-y-[1px] hover:shadow-xl"
-                  />
-                  <Link
-                    href="/contact"
-                    className="rounded-full border border-white/35 px-5 py-3 text-center text-sm font-semibold uppercase tracking-[0.18em] text-white transition hover:border-white hover:bg-white/10"
-                  >
-                    Contact directly
-                  </Link>
+                <div className="flex flex-col items-center gap-4 lg:items-center">
+                  <div className="relative h-52 w-52 overflow-hidden rounded-2xl">
+                    <Image
+                      src="/my-portrait.png"
+                      alt="Jean-Robert — René Vision"
+                      fill
+                      sizes="160px"
+                      className="object-cover object-top"
+                      priority
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                  </div>
+                  <div className="flex w-full flex-col gap-3 sm:flex-row lg:flex-col">
+                    <CalendlyPopupButton
+                      url={calendlyUrl}
+                      label="Open scheduler"
+                      className="rounded-full bg-white px-5 py-3 text-center text-sm font-semibold uppercase tracking-[0.18em] text-black transition hover:-translate-y-[1px] hover:shadow-xl"
+                    />
+                    <Link
+                      href="/contact"
+                      className="rounded-full border border-white/35 px-5 py-3 text-center text-sm font-semibold uppercase tracking-[0.18em] text-white transition hover:border-white hover:bg-white/10"
+                    >
+                      Contact directly
+                    </Link>
+                  </div>
                 </div>
               </div>
             </section>
@@ -167,7 +180,6 @@ export default function Home() {
         )}
 
         <SiteFooter />
-      </div>
     </div>
   );
 }

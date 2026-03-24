@@ -21,9 +21,8 @@ export default function AboutPage() {
   const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_URL;
 
   return (
-    <div className="flex min-h-screen flex-col bg-[url('/photo-portfolio-bg.jpg')] bg-center bg-cover bg-fixed">
-      <div className="flex min-h-screen flex-col bg-gradient-to-b from-black/75 via-black/65 to-black/80">
-        <SiteHeader />
+    <div className="flex min-h-screen flex-col">
+      <SiteHeader />
 
         <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-10 px-5 py-8 sm:px-6 sm:py-10 md:px-8 md:py-12">
           {/* Hero */}
@@ -38,10 +37,11 @@ export default function AboutPage() {
                     The version of you worth keeping.
                   </h1>
                   <p className="max-w-xl text-base leading-7 text-stone-200">
-                    I'm Jean-Robert, a portrait, editorial, and special events
-                    photographer based in New York City. I shoot with honesty
-                    and intention — no performative poses, no awkward direction.
-                    Just light, composition, and you on a genuinely good day.
+                    I'm Jean-Robert, a portrait, travel, and editorial
+                    photographer based in New York City — capturing memories in a city near you.
+                    I work with honesty and intention — no performative poses,
+                    no awkward direction. Just light, composition, and you on
+                    a genuinely good day.
                   </p>
                 </div>
 
@@ -171,7 +171,6 @@ export default function AboutPage() {
         </main>
 
         <SiteFooter />
-      </div>
     </div>
   );
 }

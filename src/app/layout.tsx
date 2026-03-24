@@ -15,14 +15,16 @@ export const metadata: Metadata = {
     template: "%s | René Vision",
   },
   description:
-    "NYC-based portrait, editorial, and brand photographer. Sharp visuals, intentional direction, and a process built around you. Book a session in New York City.",
+    "NYC-based portrait, special events, travel, editorial, and brand photographer. Sharp visuals, intentional direction, and a process built around you.",
   keywords: [
     "NYC photographer",
     "New York City portrait photographer",
+    "travel photographer",
     "editorial photographer NYC",
     "brand photographer New York",
     "headshot photographer NYC",
     "couples photographer New York",
+    "destination photographer",
     "René Vision",
   ],
   authors: [{ name: "Jean-Robert", url: baseUrl }],
@@ -67,7 +69,12 @@ export default function RootLayout({
           src="https://assets.calendly.com/assets/external/widget.js"
           strategy="lazyOnload"
         />
-        <PageTransition>{children}</PageTransition>
+        {/* Global fixed background — outside PageTransition so transforms don't break it */}
+        <div className="fixed inset-0 -z-10 bg-[url('/photo-portfolio-bg.jpg')] bg-center bg-cover" />
+        <div className="fixed inset-0 -z-10 bg-gradient-to-b from-black/75 via-black/65 to-black/80" />
+        <div className="pt-20">
+          <PageTransition>{children}</PageTransition>
+        </div>
       </body>
       <GoogleTagManager gtmId="GTM-TP9CLLQH" />
     </html>

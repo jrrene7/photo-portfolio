@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import SiteHeader from "../components/SiteHeader";
 import SiteFooter from "../components/SiteFooter";
@@ -9,6 +9,7 @@ const sessionTypes = [
   "Portrait",
   "Couples",
   "Editorial",
+  "Travel",
   "Corporate Headshots",
   "Brand / Retainer",
   "Event",
@@ -20,7 +21,7 @@ export default function ContactPage() {
   const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setStatus("sending");
     setErrorMsg("");
@@ -54,9 +55,8 @@ export default function ContactPage() {
     setForm((prev) => ({ ...prev, [field]: value }));
 
   return (
-    <div className="flex min-h-screen flex-col bg-[url('/photo-portfolio-bg.jpg')] bg-center bg-cover bg-fixed">
-      <div className="flex min-h-screen flex-col bg-gradient-to-b from-black/75 via-black/65 to-black/80">
-        <SiteHeader />
+    <div className="flex min-h-screen flex-col">
+      <SiteHeader />
 
         <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-10 px-5 py-8 sm:px-6 sm:py-10 md:px-8 md:py-12">
           <section className="grid gap-10 rounded-[2rem] border border-white/10 bg-black/30 p-6 shadow-2xl backdrop-blur lg:grid-cols-[1fr_1.2fr] lg:p-8">
@@ -187,7 +187,6 @@ export default function ContactPage() {
         </main>
 
         <SiteFooter />
-      </div>
     </div>
   );
 }
