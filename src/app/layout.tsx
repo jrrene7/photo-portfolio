@@ -75,8 +75,8 @@ export default function RootLayout({
         <div className="pt-20">
           <PageTransition>{children}</PageTransition>
         </div>
+        <GoogleTagManager gtmId="GTM-TP9CLLQH" />
       </body>
-      <GoogleTagManager gtmId="GTM-TP9CLLQH" />
     </html>
   );
 }
