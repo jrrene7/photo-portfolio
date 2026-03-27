@@ -1,12 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
+import { rateLimit } from "@/lib/rateLimit";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const PHOTOGRAPHER_EMAIL = "j-r@renevision.net";
 const FROM_EMAIL = process.env.RESEND_FROM_EMAIL ?? "onboarding@resend.dev";
 
 export async function POST(req: NextRequest) {
-  const { name, email, sessionType, message } = await req.json();
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0].trim() ?? "unknown";
+  if (!rateLimit(ip, 5, 60_000).allowed) {
+    return NextResponse.json({ error: "Too many requests. Please wait a moment." }, { status: 429 });
+  }
+
+  const { name, email, sessionType, message, website } = await req.json();
+
+  // Honeypot — bots fill this, humans don't
+  if (website) return NextResponse.json({ success: true });
 
   if (!name?.trim() || !email?.trim() || !message?.trim()) {
     return NextResponse.json({ error: "Name, email, and message are required." }, { status: 400 });

@@ -1,5 +1,6 @@
 import Script from "next/script";
 import { GoogleTagManager } from "@next/third-parties/google";
+import JsonLd from "./components/JsonLd";
 import PageTransition from "./components/PageTransition";
 import { GeistSans } from "geist/font/sans";
 import type { Metadata } from "next";
@@ -27,6 +28,7 @@ export const metadata: Metadata = {
     "destination photographer",
     "René Vision",
   ],
+  alternates: { canonical: baseUrl },
   authors: [{ name: "Jean-Robert", url: baseUrl }],
   openGraph: {
     type: "website",
@@ -63,8 +65,19 @@ export default function RootLayout({
           rel="stylesheet"
           href="https://assets.calendly.com/assets/external/widget.css"
         />
+        <JsonLd />
       </head>
       <body className={`${GeistSans.variable} antialiased`}>
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-WTTRHDXBXB"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">{`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-WTTRHDXBXB');
+        `}</Script>
         <Script
           src="https://assets.calendly.com/assets/external/widget.js"
           strategy="lazyOnload"

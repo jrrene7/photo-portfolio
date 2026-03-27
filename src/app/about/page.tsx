@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: "About",
   description:
     "Jean-Robert is a portrait and editorial photographer based in New York City, creating sharp, intentional visual stories for individuals, couples, and brands.",
+  alternates: { canonical: "https://renevision.net/about" },
   openGraph: {
     title: "About | René Vision",
     description:

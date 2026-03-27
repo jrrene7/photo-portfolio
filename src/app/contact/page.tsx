@@ -17,7 +17,7 @@ const sessionTypes = [
 ];
 
 export default function ContactPage() {
-  const [form, setForm] = useState({ name: "", email: "", sessionType: "", message: "" });
+  const [form, setForm] = useState({ name: "", email: "", sessionType: "", message: "", website: "" });
   const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -117,6 +117,16 @@ export default function ContactPage() {
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+                  {/* Honeypot — hidden from humans, bots fill it in */}
+                  <input
+                    type="text"
+                    name="website"
+                    value={form.website}
+                    onChange={(e) => update("website", e.target.value)}
+                    style={{ display: "none" }}
+                    tabIndex={-1}
+                    autoComplete="off"
+                  />
                   <div className="grid gap-5 sm:grid-cols-2">
                     <label className="flex flex-col gap-2">
                       <span className="text-xs uppercase tracking-[0.2em] text-stone-300">Name</span>

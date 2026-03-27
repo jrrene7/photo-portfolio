@@ -8,10 +8,11 @@ export const metadata: Metadata = {
   title: "Book a Session",
   description:
     "Book a portrait, special event, editorial, headshot, or brand photography session. Based in New York, shooting worldwide. Simple scheduling, clear packages, and a process built around you.",
+  alternates: { canonical: "https://renevision.net/book" },
   openGraph: {
     title: "Book a Session | René Vision",
     description:
-      "Book a portrait, sepcial event, editorial, headshot, or brand photography session. Based in New York, shooting worldwide.",
+      "Book a portrait, special event, editorial, headshot, or brand photography session. Based in New York, shooting worldwide.",
     url: "https://renevision.net/book",
   },
 };
