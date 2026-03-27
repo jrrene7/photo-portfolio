@@ -109,7 +109,7 @@ export default function ContactPage() {
                     Check your inbox for a confirmation. I'll be in touch within 1–2 business days.
                   </p>
                   <button
-                    onClick={() => { setForm({ name: "", email: "", sessionType: "", message: "" }); setStatus("idle"); }}
+                    onClick={() => { setForm({ name: "", email: "", sessionType: "", message: "", website: "" }); setStatus("idle"); }}
                     className="mt-2 rounded-full border border-white/25 px-5 py-2 text-sm text-white transition hover:border-white hover:bg-white/10"
                   >
                     Send another
