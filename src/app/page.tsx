@@ -65,11 +65,10 @@ export default function Home() {
                     René Vision
                   </p>
                   <h1 className="font-display text-4xl leading-none text-white sm:text-5xl lg:text-6xl">
-                    Portraits, special events, and travel stories with a sharper edge.
+                    The version of you worth keeping.
                   </h1>
                   <p className="max-w-2xl text-base leading-7 text-stone-200 sm:text-lg">
-                    Based in New York City, to a city near you. Explore the portfolio
-                    and book when you're ready to lock in.
+                    I'm Jean-Robert, a portrait, editorial, and special events photographer based in New York City. I shoot with honesty and intention — no performative poses, no awkward direction. Just light, composition, and you on a genuinely good day.
                   </p>
                 </div>
 

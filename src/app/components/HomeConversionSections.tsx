@@ -3,39 +3,19 @@
 import React, { useState } from "react";
 import CalendlyPopupButton from "./CalendlyPopupButton";
 
-const testimonials = [
-  {
-    quote:
-      "Jean-Robert captured our engagement with style and calm direction. We felt taken care of from the first message to the final gallery.",
-    author: "Sarah L.",
-    context: "Engagement session",
-  },
-  {
-    quote:
-      "The headshots looked sharp, modern, and consistent across the whole team. The process was smooth enough that we booked again.",
-    author: "ACME Studio",
-    context: "Corporate portraits",
-  },
-  {
-    quote:
-      "The session felt relaxed, personal, and intentional. The final edits looked elevated without losing who we are.",
-    author: "Michael & Laura",
-    context: "Couples session",
-  },
-];
 
 const packages = [
   {
     name: "Starter",
     price: "$250",
     badge: "Introductory",
+    tagline: "A focused session for when you know what you want — one strong look, sharp and done.",
     calendlyUrl:
       "https://calendly.com/renevision-media/15-minute-meeting-clone-clone",
     details: [
       "Up to one hour, in-studio or on location",
       "5 professionally retouched high-res images",
-      "Photo gallery",
-      "Great for headshots, portraits, or social media",
+      "Private photo gallery",
     ],
   },
   {
@@ -43,19 +23,20 @@ const packages = [
     price: "$450",
     badge: "Most Popular",
     featured: true,
+    tagline: "Room to explore. Enough time to find the frame that actually feels like you.",
     calendlyUrl:
       "https://calendly.com/renevision-media/30-minute-meeting-clone",
     details: [
       "Two hours tailored to your vision",
       "10 carefully retouched high-res images",
       "Pre-session consultation included",
-      "Ideal for couples, editorials, or personal brand",
     ],
   },
   {
     name: "Travel",
     price: "Custom",
     badge: "Worldwide",
+    tagline: "Anywhere you need me.",
     calendlyUrl: "https://calendly.com/renevision-media/30min",
     details: [
       "On-location shoots anywhere in the world",
@@ -68,30 +49,31 @@ const packages = [
     name: "Brand Retainer",
     price: "$900/mo",
     badge: "Ongoing Content",
+    tagline: "For people who show up consistently. Content that builds a visual identity over time.",
     calendlyUrl: "https://calendly.com/renevision-media/30min",
     details: [
       "Monthly session with flexible scheduling",
       "25 professionally edited images per month",
       "Priority booking and creative planning",
-      "Built for founders, creators, and local businesses",
     ],
   },
   {
     name: "Corporate Headshots",
     price: "$600",
     badge: "Teams",
+    tagline: "Sharp, modern, and consistent across the whole team — on your turf.",
     calendlyUrl: "https://calendly.com/renevision-media/30min",
     details: [
       "On-site session up to 1.5 hours, teams up to 10",
       "Portable studio lighting and backdrop included",
       "Individually retouched high-res headshots",
-      "Photo gallery",
     ],
   },
   {
     name: "Events",
     price: "$800+",
     badge: "Event Coverage",
+    tagline: "The moments that disappear the fastest are the ones worth keeping.",
     calendlyUrl: "https://calendly.com/renevision-media/30min",
     details: [
       "Up to three hours of event coverage",
@@ -140,40 +122,6 @@ export default function HomeConversionSections() {
 
   return (
     <div className="flex w-full flex-col gap-12">
-      {/* Testimonials */}
-      <section className="w-full rounded-[2rem] border border-white/10 bg-black/25 p-6 shadow-2xl backdrop-blur sm:p-8">
-        <div className="mb-8 flex flex-col gap-2 text-center">
-          <p className="text-sm uppercase tracking-[0.3em] text-stone-400">
-            Client stories
-          </p>
-          <h2 className="font-display text-3xl text-white sm:text-4xl">
-            The experience matters as much as the images.
-          </h2>
-        </div>
-
-        <div className="grid gap-5 lg:grid-cols-3">
-          {testimonials.map((item) => (
-            <article
-              key={item.author}
-              className="flex h-full flex-col justify-between rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-6"
-            >
-              <div className="space-y-4">
-                <span className="font-display text-5xl leading-none text-white/20">
-                  &ldquo;
-                </span>
-                <p className="text-base leading-7 text-stone-100">{item.quote}</p>
-              </div>
-              <div className="mt-6 border-t border-white/10 pt-4">
-                <p className="font-display text-lg text-white">{item.author}</p>
-                <p className="text-xs uppercase tracking-[0.22em] text-stone-400">
-                  {item.context}
-                </p>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
-
       {/* Packages */}
       <section className="w-full rounded-[2rem] border border-white/10 bg-black/25 p-6 shadow-2xl backdrop-blur sm:p-8">
         <div className="mb-8 flex flex-col gap-2 text-center">
@@ -208,6 +156,9 @@ export default function HomeConversionSections() {
                     {pack.price}
                   </p>
                 </div>
+                {pack.tagline && (
+                  <p className="text-sm leading-6 text-stone-400">{pack.tagline}</p>
+                )}
               </div>
 
               <ul className="mt-6 flex flex-1 flex-col gap-3 border-t border-white/10 pt-5">
