@@ -69,7 +69,7 @@ export default function Lightbox({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-black/80" />
+          <div className="fixed inset-0 bg-black/90" />
         </Transition.Child>
 
         <div
@@ -86,7 +86,7 @@ export default function Lightbox({
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="relative w-full max-w-4xl overflow-hidden rounded-lg bg-black/30 shadow-xl backdrop-blur">
+              <Dialog.Panel className="relative w-full max-w-5xl overflow-hidden">
                 <div className="relative h-[70vh] w-full">
                   <LightboxImage key={current.publicId} publicId={current.publicId} alt={current.alt} />
                 </div>

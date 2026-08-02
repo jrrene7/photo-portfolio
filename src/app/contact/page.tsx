@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
+import CalendlyPopupButton from "../components/CalendlyPopupButton";
+import Reveal from "../components/Reveal";
 import SiteHeader from "../components/SiteHeader";
 import SiteFooter from "../components/SiteFooter";
 
@@ -16,9 +17,27 @@ const sessionTypes = [
   "Other",
 ];
 
+const goodToKnow = [
+  "Based in NYC — shooting worldwide.",
+  "Fully edited galleries within 1–2 weeks.",
+  "Reschedule free up to 24 hours before your session.",
+];
+
+const inputClasses =
+  "w-full border-b border-ink/20 bg-transparent py-3 text-base text-ink outline-none transition-colors duration-300 placeholder:text-ink/30 focus:border-ink";
+
 export default function ContactPage() {
-  const [form, setForm] = useState({ name: "", email: "", sessionType: "", message: "", website: "" });
-  const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
+  const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_URL;
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    sessionType: "",
+    message: "",
+    website: "",
+  });
+  const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">(
+    "idle",
+  );
   const [errorMsg, setErrorMsg] = useState("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -58,145 +77,177 @@ export default function ContactPage() {
     <div className="flex min-h-screen flex-col">
       <SiteHeader />
 
-        <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-10 px-5 py-8 sm:px-6 sm:py-10 md:px-8 md:py-12">
-          <section className="grid gap-10 rounded-[2rem] border border-white/10 bg-black/30 p-6 shadow-2xl backdrop-blur lg:grid-cols-[1fr_1.2fr] lg:p-8">
+      <main className="mx-auto w-full max-w-7xl grow px-5 pb-24 pt-36 sm:px-8 sm:pb-32">
+        <p className="text-xs uppercase tracking-[0.32em] text-muted">
+          Contact & booking
+        </p>
+        <h1 className="mt-6 max-w-3xl font-display text-5xl leading-[1.02] tracking-tight text-ink sm:text-6xl lg:text-7xl">
+          Let&apos;s talk about <span className="italic">it.</span>
+        </h1>
 
-            {/* Left — intro */}
-            <div className="flex flex-col gap-6">
-              <div className="space-y-4">
-                <p className="text-sm uppercase tracking-[0.3em] text-stone-300">Contact</p>
-                <h1 className="font-display text-4xl text-white sm:text-5xl">
-                  Let's talk about your shoot.
-                </h1>
-                <p className="text-base leading-7 text-stone-200">
-                  Fill out the form and I'll get back to you within 1–2 business days.
-                  If you already know what you want, you can book directly.
+        <div className="mt-16 grid gap-16 lg:grid-cols-[1.15fr_0.85fr] lg:gap-24">
+          {/* ---------- Form ---------- */}
+          <Reveal>
+            {status === "done" ? (
+              <div className="flex min-h-[320px] flex-col justify-center border-t border-ink/10 pt-8">
+                <p className="font-display text-3xl text-ink">Message sent.</p>
+                <p className="mt-3 max-w-sm text-sm leading-7 text-muted">
+                  Check your inbox for a confirmation. I&apos;ll be in touch
+                  within 1–2 business days.
                 </p>
-              </div>
-
-              <div className="space-y-3 rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5">
-                <p className="text-xs uppercase tracking-[0.26em] text-stone-300">Or reach out directly</p>
-                <a
-                  href="mailto:j-r@renevision.net"
-                  className="block text-sm text-stone-200 transition hover:text-white"
+                <button
+                  onClick={() => {
+                    setForm({
+                      name: "",
+                      email: "",
+                      sessionType: "",
+                      message: "",
+                      website: "",
+                    });
+                    setStatus("idle");
+                  }}
+                  className="link-underline is-active mt-6 self-start text-[13px] uppercase tracking-[0.18em] text-ink"
                 >
-                  j-r@renevision.net
-                </a>
-                <a
-                  href="https://instagram.com/rene.vision"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block text-sm text-stone-200 transition hover:text-white"
-                >
-                  @rene.vision on Instagram
-                </a>
+                  Send another
+                </button>
               </div>
-
-              <Link
-                href="/book"
-                className="rounded-full border border-white/35 px-5 py-3 text-center text-sm font-semibold uppercase tracking-[0.18em] text-white transition hover:border-white hover:bg-white/10"
+            ) : (
+              <form
+                onSubmit={handleSubmit}
+                className="flex flex-col gap-8 border-t border-ink/10 pt-10"
               >
-                Skip to booking
-              </Link>
-            </div>
+                {/* Honeypot — hidden from humans, bots fill it in */}
+                <input
+                  type="text"
+                  name="website"
+                  value={form.website}
+                  onChange={(e) => update("website", e.target.value)}
+                  style={{ display: "none" }}
+                  tabIndex={-1}
+                  autoComplete="off"
+                />
 
-            {/* Right — form */}
-            <div className="rounded-[1.75rem] border border-white/10 bg-black/30 p-6">
-              {status === "done" ? (
-                <div className="flex h-full flex-col items-center justify-center gap-4 text-center">
-                  <p className="font-display text-2xl text-white">Message sent.</p>
-                  <p className="text-sm leading-6 text-stone-300">
-                    Check your inbox for a confirmation. I'll be in touch within 1–2 business days.
-                  </p>
-                  <button
-                    onClick={() => { setForm({ name: "", email: "", sessionType: "", message: "", website: "" }); setStatus("idle"); }}
-                    className="mt-2 rounded-full border border-white/25 px-5 py-2 text-sm text-white transition hover:border-white hover:bg-white/10"
-                  >
-                    Send another
-                  </button>
-                </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-                  {/* Honeypot — hidden from humans, bots fill it in */}
-                  <input
-                    type="text"
-                    name="website"
-                    value={form.website}
-                    onChange={(e) => update("website", e.target.value)}
-                    style={{ display: "none" }}
-                    tabIndex={-1}
-                    autoComplete="off"
-                  />
-                  <div className="grid gap-5 sm:grid-cols-2">
-                    <label className="flex flex-col gap-2">
-                      <span className="text-xs uppercase tracking-[0.2em] text-stone-300">Name</span>
-                      <input
-                        type="text"
-                        value={form.name}
-                        onChange={(e) => update("name", e.target.value)}
-                        placeholder="Your name"
-                        required
-                        className="rounded-full border border-white/15 bg-white px-4 py-3 text-sm text-black outline-none transition focus:border-black"
-                      />
-                    </label>
-
-                    <label className="flex flex-col gap-2">
-                      <span className="text-xs uppercase tracking-[0.2em] text-stone-300">Email</span>
-                      <input
-                        type="email"
-                        value={form.email}
-                        onChange={(e) => update("email", e.target.value)}
-                        placeholder="you@example.com"
-                        required
-                        className="rounded-full border border-white/15 bg-white px-4 py-3 text-sm text-black outline-none transition focus:border-black"
-                      />
-                    </label>
-                  </div>
-
+                <div className="grid gap-8 sm:grid-cols-2">
                   <label className="flex flex-col gap-2">
-                    <span className="text-xs uppercase tracking-[0.2em] text-stone-300">Session type</span>
-                    <select
-                      value={form.sessionType}
-                      onChange={(e) => update("sessionType", e.target.value)}
-                      className="rounded-full border border-white/15 bg-white px-4 py-3 text-sm text-black outline-none transition focus:border-black"
-                    >
-                      <option value="">Select a session type</option>
-                      {sessionTypes.map((t) => (
-                        <option key={t} value={t}>{t}</option>
-                      ))}
-                    </select>
-                  </label>
-
-                  <label className="flex flex-col gap-2">
-                    <span className="text-xs uppercase tracking-[0.2em] text-stone-300">Message</span>
-                    <textarea
-                      value={form.message}
-                      onChange={(e) => update("message", e.target.value)}
-                      placeholder="Tell me about your shoot — timing, location, vibe, anything relevant."
+                    <span className="text-xs uppercase tracking-[0.2em] text-muted">
+                      Name
+                    </span>
+                    <input
+                      type="text"
+                      value={form.name}
+                      onChange={(e) => update("name", e.target.value)}
+                      placeholder="Your name"
                       required
-                      rows={5}
-                      className="resize-none rounded-2xl border border-white/15 bg-white px-4 py-3 text-sm text-black outline-none transition focus:border-black"
+                      className={inputClasses}
                     />
                   </label>
 
-                  {status === "error" && (
-                    <p className="text-sm text-red-400">{errorMsg}</p>
-                  )}
+                  <label className="flex flex-col gap-2">
+                    <span className="text-xs uppercase tracking-[0.2em] text-muted">
+                      Email
+                    </span>
+                    <input
+                      type="email"
+                      value={form.email}
+                      onChange={(e) => update("email", e.target.value)}
+                      placeholder="you@example.com"
+                      required
+                      className={inputClasses}
+                    />
+                  </label>
+                </div>
 
-                  <button
-                    type="submit"
-                    disabled={status === "sending"}
-                    className="rounded-full bg-white px-5 py-3 text-sm font-semibold uppercase tracking-[0.18em] text-black transition hover:-translate-y-[1px] hover:shadow-xl disabled:opacity-50"
+                <label className="flex flex-col gap-2">
+                  <span className="text-xs uppercase tracking-[0.2em] text-muted">
+                    Session type
+                  </span>
+                  <select
+                    value={form.sessionType}
+                    onChange={(e) => update("sessionType", e.target.value)}
+                    className={`${inputClasses} cursor-pointer appearance-none`}
                   >
-                    {status === "sending" ? "Sending…" : "Send message"}
-                  </button>
-                </form>
-              )}
-            </div>
-          </section>
-        </main>
+                    <option value="">Select a session type</option>
+                    {sessionTypes.map((t) => (
+                      <option key={t} value={t}>
+                        {t}
+                      </option>
+                    ))}
+                  </select>
+                </label>
 
-        <SiteFooter />
+                <label className="flex flex-col gap-2">
+                  <span className="text-xs uppercase tracking-[0.2em] text-muted">
+                    Message
+                  </span>
+                  <textarea
+                    value={form.message}
+                    onChange={(e) => update("message", e.target.value)}
+                    placeholder="Tell me about your shoot — timing, location, vibe, anything relevant."
+                    required
+                    rows={4}
+                    className={`${inputClasses} resize-none`}
+                  />
+                </label>
+
+                {status === "error" && (
+                  <p className="text-sm text-red-600">{errorMsg}</p>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={status === "sending"}
+                  className="self-start rounded-full bg-ink px-8 py-3.5 text-[13px] uppercase tracking-[0.18em] text-paper transition-all duration-300 hover:-translate-y-px hover:shadow-lg hover:shadow-ink/20 disabled:opacity-50"
+                >
+                  {status === "sending" ? "Sending…" : "Send message"}
+                </button>
+              </form>
+            )}
+          </Reveal>
+
+          {/* ---------- Book directly ---------- */}
+          <Reveal delay={150}>
+            <div className="flex flex-col gap-10 border-t border-ink/10 pt-10">
+              <div>
+                <p className="text-xs uppercase tracking-[0.32em] text-muted">
+                  Know what you want?
+                </p>
+                <p className="mt-4 font-display text-2xl leading-snug text-ink">
+                  Skip the form and pick a time that fits to discuss your idea.
+                </p>
+                <CalendlyPopupButton
+                  url={calendlyUrl}
+                  label="Open the scheduler"
+                  className="mt-6 rounded-full border border-ink px-7 py-3.5 text-[13px] uppercase tracking-[0.18em] text-ink transition-all duration-300 hover:bg-ink hover:text-paper"
+                />
+              </div>
+
+              <div>
+                <p className="text-xs uppercase tracking-[0.32em] text-muted">
+                  Or reach out directly
+                </p>
+                <div className="mt-4 flex flex-col items-start gap-2">
+                  <a
+                    href="mailto:j-r@renevision.net"
+                    className="link-underline text-sm text-ink"
+                  >
+                    j-r@renevision.net
+                  </a>
+                  <a
+                    href="https://instagram.com/rene.vision"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="link-underline text-sm text-ink"
+                  >
+                    @rene.vision on Instagram
+                  </a>
+                </div>
+              </div>
+            </div>
+          </Reveal>
+        </div>
+      </main>
+
+      <SiteFooter />
     </div>
   );
 }

@@ -2,14 +2,14 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
 export const metadata: Metadata = {
-  title: "Contact",
+  title: "Contact & Booking",
   description:
-    "Get in touch with René Vision to book a portrait, editorial, brand, or event photography session in New York City or worldwide.",
+    "Get in touch or book a portrait, editorial, brand, or event photography session with René Vision — New York City and worldwide.",
   alternates: { canonical: "https://renevision.net/contact" },
   openGraph: {
-    title: "Contact | René Vision",
+    title: "Contact & Booking | René Vision",
     description:
-      "Get in touch with René Vision to book a portrait, editorial, brand, or event photography session in New York City or worldwide.",
+      "Get in touch or book a portrait, editorial, brand, or event photography session with René Vision — New York City and worldwide.",
     url: "https://renevision.net/contact",
   },
 };

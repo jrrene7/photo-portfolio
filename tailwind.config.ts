@@ -8,10 +8,20 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic':
-          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+      colors: {
+        paper: '#f7f2e7',
+        ink: '#292116',
+        muted: '#7d7263',
+        accent: {
+          DEFAULT: '#b1502a',
+          soft: '#d98e5f',
+        },
+      },
+      fontFamily: {
+        display: ['var(--font-fraunces)', 'Georgia', 'serif'],
+      },
+      transitionTimingFunction: {
+        editorial: 'cubic-bezier(0.22, 1, 0.36, 1)',
       },
     },
   },

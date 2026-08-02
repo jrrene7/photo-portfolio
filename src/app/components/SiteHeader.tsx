@@ -7,11 +7,14 @@ import { usePathname } from "next/navigation";
 import CalendlyPopupButton from "./CalendlyPopupButton";
 
 const navItems = [
-  { href: "/", label: "Portfolio" },
+  { href: "/#work", label: "Work" },
   { href: "/about", label: "About" },
-  { href: "/book", label: "Booking" },
   { href: "/contact", label: "Contact" },
 ];
+
+/** "/#work" is active on the homepage; other items match the pathname exactly. */
+const isItemActive = (href: string, pathname: string) =>
+  href === "/#work" ? pathname === "/" : pathname === href;
 
 export default function SiteHeader() {
   const pathname = usePathname();
@@ -21,6 +24,7 @@ export default function SiteHeader() {
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
+    onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -34,37 +38,35 @@ export default function SiteHeader() {
   return (
     <>
       <header
-        className={`fixed inset-x-0 top-0 z-40 transition-all duration-300 ${
+        className={`fixed inset-x-0 top-0 z-40 transition-all duration-500 ${
           scrolled
-            ? "bg-black/50 backdrop-blur-xl"
-            : "bg-transparent backdrop-blur-sm"
+            ? "border-b border-ink/10 bg-paper/85 backdrop-blur-xl"
+            : "border-b border-transparent bg-transparent"
         }`}
       >
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-2.5 sm:px-6 md:px-8">
-          {/* Logo */}
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-4 sm:px-8">
+          {/* Logo — white asset inverted to ink */}
           <Link href="/" onClick={() => setIsMenuOpen(false)}>
             <Image
               src="/renevision-logo-white.png"
               alt="René Vision"
               width={3510}
               height={2421}
-              className="h-auto w-[110px] object-contain sm:w-[130px]"
+              className="h-auto w-[104px] object-contain brightness-0 sm:w-[120px]"
               priority
             />
           </Link>
 
           {/* Desktop nav */}
-          <nav className="hidden items-center gap-7 md:flex">
+          <nav className="hidden items-center gap-9 md:flex">
             {navItems.map((item) => {
-              const isActive = pathname === item.href;
+              const isActive = isItemActive(item.href, pathname);
               return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`text-sm transition-colors duration-200 ${
-                    isActive
-                      ? "text-white"
-                      : "text-stone-400 hover:text-white"
+                  className={`link-underline text-[13px] uppercase tracking-[0.22em] transition-colors duration-300 ${
+                    isActive ? "is-active text-ink" : "text-muted hover:text-ink"
                   }`}
                 >
                   {item.label}
@@ -77,15 +79,15 @@ export default function SiteHeader() {
           <div className="hidden md:block">
             <CalendlyPopupButton
               url={calendlyUrl}
-              label="Book"
-              className="rounded-full border border-white/30 px-4 py-2 text-sm text-white transition hover:border-white hover:bg-white/10"
+              label="Book a session"
+              className="rounded-full bg-ink px-5 py-2.5 text-[13px] uppercase tracking-[0.18em] text-paper transition-all duration-300 hover:-translate-y-px hover:shadow-lg hover:shadow-ink/15"
             />
           </div>
 
           {/* Mobile menu toggle */}
           <button
             type="button"
-            className="relative z-50 p-1 text-white md:hidden"
+            className="relative z-50 p-1 text-ink md:hidden"
             aria-expanded={isMenuOpen}
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
             onClick={() => setIsMenuOpen((v) => !v)}
@@ -111,21 +113,22 @@ export default function SiteHeader() {
 
       {/* Mobile overlay */}
       <div
-        className={`fixed inset-0 z-30 flex flex-col bg-black/95 backdrop-blur-xl transition-all duration-300 md:hidden ${
+        className={`fixed inset-0 z-30 flex flex-col bg-paper transition-all duration-500 ease-editorial md:hidden ${
           isMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
       >
-        <div className="flex flex-1 flex-col items-center justify-center gap-8 px-8">
-          {navItems.map((item) => {
-            const isActive = pathname === item.href;
+        <div className="flex flex-1 flex-col items-start justify-center gap-2 px-10">
+          {navItems.map((item, i) => {
+            const isActive = isItemActive(item.href, pathname);
             return (
               <Link
                 key={item.href}
                 href={item.href}
                 onClick={() => setIsMenuOpen(false)}
-                className={`font-display text-3xl transition-colors ${
-                  isActive ? "text-white" : "text-stone-400 hover:text-white"
-                }`}
+                style={{ transitionDelay: isMenuOpen ? `${120 + i * 70}ms` : "0ms" }}
+                className={`font-display text-5xl leading-tight transition-all duration-500 ease-editorial ${
+                  isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+                } ${isActive ? "italic text-ink" : "text-ink/60 hover:text-ink"}`}
               >
                 {item.label}
               </Link>
@@ -133,16 +136,21 @@ export default function SiteHeader() {
           })}
         </div>
 
-        <div className="flex flex-col gap-3 px-8 pb-12">
+        <div
+          className={`flex flex-col gap-3 px-10 pb-14 transition-all duration-500 ease-editorial ${
+            isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+          }`}
+          style={{ transitionDelay: isMenuOpen ? "340ms" : "0ms" }}
+        >
           <CalendlyPopupButton
             url={calendlyUrl}
-            label="Open scheduler"
-            className="rounded-full bg-white px-5 py-4 text-center text-sm font-semibold uppercase tracking-[0.18em] text-black"
+            label="Book a session"
+            className="rounded-full bg-ink px-5 py-4 text-center text-sm uppercase tracking-[0.18em] text-paper"
             onOpen={() => setIsMenuOpen(false)}
           />
           <Link
             href="mailto:j-r@renevision.net"
-            className="rounded-full border border-white/20 px-5 py-4 text-center text-sm font-semibold uppercase tracking-[0.18em] text-white"
+            className="rounded-full border border-ink/20 px-5 py-4 text-center text-sm uppercase tracking-[0.18em] text-ink"
             onClick={() => setIsMenuOpen(false)}
           >
             Email instead

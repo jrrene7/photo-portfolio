@@ -3,9 +3,26 @@ import { GoogleTagManager } from "@next/third-parties/google";
 import JsonLd from "./components/JsonLd";
 import PageTransition from "./components/PageTransition";
 import { GeistSans } from "geist/font/sans";
+import localFont from "next/font/local";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import "./globals.css";
+
+// Fraunces variable font (wght + opsz + SOFT + WONK axes), self-hosted
+const fraunces = localFont({
+  src: [
+    {
+      path: "../fonts/fraunces-latin-full-normal.woff2",
+      style: "normal",
+    },
+    {
+      path: "../fonts/fraunces-latin-full-italic.woff2",
+      style: "italic",
+    },
+  ],
+  variable: "--font-fraunces",
+  display: "swap",
+});
 
 const baseUrl = "https://renevision.net";
 
@@ -67,7 +84,7 @@ export default function RootLayout({
         />
         <JsonLd />
       </head>
-      <body className={`${GeistSans.variable} antialiased`}>
+      <body className={`${GeistSans.variable} ${fraunces.variable} antialiased`}>
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-WTTRHDXBXB"
           strategy="afterInteractive"
@@ -82,12 +99,7 @@ export default function RootLayout({
           src="https://assets.calendly.com/assets/external/widget.js"
           strategy="lazyOnload"
         />
-        {/* Global fixed background — outside PageTransition so transforms don't break it */}
-        <div className="fixed inset-0 -z-10 bg-[url('/photo-portfolio-bg.jpg')] bg-center bg-cover" />
-        <div className="fixed inset-0 -z-10 bg-gradient-to-b from-black/75 via-black/65 to-black/80" />
-        <div className="pt-20">
-          <PageTransition>{children}</PageTransition>
-        </div>
+        <PageTransition>{children}</PageTransition>
         <GoogleTagManager gtmId="GTM-TP9CLLQH" />
       </body>
     </html>
