@@ -2,6 +2,7 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { google, Auth } from "googleapis";
+import { escapeHtml } from "@/lib/escapeHtml";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const PHOTOGRAPHER_EMAIL = "j-r@renevision.net";
@@ -65,9 +66,20 @@ function parseSignatureHeader(header: string | null) {
   return { timestamp, signature };
 }
 
+// Reject webhooks whose signature timestamp is older than this (replay protection)
+const SIGNATURE_TOLERANCE_SECONDS = 300;
+
 function verifyCalendlySignature(body: string, header: string | null, signingKey: string) {
   const parsed = parseSignatureHeader(header);
   if (!parsed) {
+    return false;
+  }
+
+  const timestampSeconds = Number(parsed.timestamp);
+  if (
+    !Number.isFinite(timestampSeconds) ||
+    Math.abs(Date.now() / 1000 - timestampSeconds) > SIGNATURE_TOLERANCE_SECONDS
+  ) {
     return false;
   }
 
@@ -164,16 +176,18 @@ async function sendBookingNotification(summary: EventSummary) {
     ? `Booking cancelled — ${summary.inviteeName ?? summary.inviteeEmail}`
     : `New booking — ${summary.inviteeName ?? summary.inviteeEmail}`;
 
+  const safe = (value: string | null) => (value ? escapeHtml(value) : "—");
+
   const html = `
     <h2 style="margin:0 0 16px">${isCancel ? "❌ Booking Cancelled" : "✅ New Booking"}</h2>
     <table style="border-collapse:collapse;font-family:sans-serif;font-size:14px">
-      <tr><td style="padding:4px 12px 4px 0;color:#666">Name</td><td><strong>${summary.inviteeName ?? "—"}</strong></td></tr>
-      <tr><td style="padding:4px 12px 4px 0;color:#666">Email</td><td>${summary.inviteeEmail ?? "—"}</td></tr>
-      <tr><td style="padding:4px 12px 4px 0;color:#666">Session</td><td>${summary.eventTypeName ?? summary.scheduledEventName ?? "—"}</td></tr>
+      <tr><td style="padding:4px 12px 4px 0;color:#666">Name</td><td><strong>${safe(summary.inviteeName)}</strong></td></tr>
+      <tr><td style="padding:4px 12px 4px 0;color:#666">Email</td><td>${safe(summary.inviteeEmail)}</td></tr>
+      <tr><td style="padding:4px 12px 4px 0;color:#666">Session</td><td>${safe(summary.eventTypeName ?? summary.scheduledEventName)}</td></tr>
       <tr><td style="padding:4px 12px 4px 0;color:#666">Starts</td><td>${formatTime(summary.startsAt)}</td></tr>
       <tr><td style="padding:4px 12px 4px 0;color:#666">Ends</td><td>${formatTime(summary.endsAt)}</td></tr>
-      <tr><td style="padding:4px 12px 4px 0;color:#666">Timezone</td><td>${summary.inviteeTimezone ?? "—"}</td></tr>
-      <tr><td style="padding:4px 12px 4px 0;color:#666">Status</td><td>${summary.inviteeStatus ?? "—"}</td></tr>
+      <tr><td style="padding:4px 12px 4px 0;color:#666">Timezone</td><td>${safe(summary.inviteeTimezone)}</td></tr>
+      <tr><td style="padding:4px 12px 4px 0;color:#666">Status</td><td>${safe(summary.inviteeStatus)}</td></tr>
     </table>
   `;
 
@@ -204,10 +218,15 @@ export async function POST(request: Request) {
     request.headers.get("calendly-webhook-signature") ??
     request.headers.get("Calendly-Webhook-Signature");
 
-  if (
-    signingKey &&
-    !verifyCalendlySignature(rawBody, signatureHeader, signingKey)
-  ) {
+  if (!signingKey) {
+    console.error("[calendly webhook] CALENDLY_WEBHOOK_SIGNING_KEY is not set — rejecting request");
+    return NextResponse.json(
+      { ok: false, error: "Webhook is not configured." },
+      { status: 503 }
+    );
+  }
+
+  if (!verifyCalendlySignature(rawBody, signatureHeader, signingKey)) {
     return NextResponse.json(
       { ok: false, error: "Invalid Calendly webhook signature." },
       { status: 401 }
@@ -234,5 +253,5 @@ export async function POST(request: Request) {
     appendToSheet(summary),
   ]);
 
-  return NextResponse.json({ ok: true, received: summary, signatureVerified: Boolean(signingKey) });
+  return NextResponse.json({ ok: true });
 }

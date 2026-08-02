@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { rateLimit } from "@/lib/rateLimit";
+import { escapeHtml } from "@/lib/escapeHtml";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const PHOTOGRAPHER_EMAIL = "j-r@renevision.net";
@@ -25,6 +26,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid email address." }, { status: 400 });
   }
 
+  const safeName = escapeHtml(name);
+  const safeEmail = escapeHtml(email);
+  const safeSessionType = sessionType ? escapeHtml(String(sessionType)) : "";
+  const safeMessage = escapeHtml(message).replace(/\n/g, "<br>");
+
   try {
     // Notify photographer
     await resend.emails.send({
@@ -35,12 +41,12 @@ export async function POST(req: NextRequest) {
       html: `
         <h2 style="margin:0 0 16px">New Contact Inquiry</h2>
         <table style="border-collapse:collapse;font-family:sans-serif;font-size:14px">
-          <tr><td style="padding:4px 16px 4px 0;color:#666">Name</td><td><strong>${name}</strong></td></tr>
-          <tr><td style="padding:4px 16px 4px 0;color:#666">Email</td><td>${email}</td></tr>
-          <tr><td style="padding:4px 16px 4px 0;color:#666">Session type</td><td>${sessionType || "Not specified"}</td></tr>
+          <tr><td style="padding:4px 16px 4px 0;color:#666">Name</td><td><strong>${safeName}</strong></td></tr>
+          <tr><td style="padding:4px 16px 4px 0;color:#666">Email</td><td>${safeEmail}</td></tr>
+          <tr><td style="padding:4px 16px 4px 0;color:#666">Session type</td><td>${safeSessionType || "Not specified"}</td></tr>
         </table>
         <p style="margin:20px 0 4px;font-family:sans-serif;font-size:14px;color:#666">Message</p>
-        <p style="font-family:sans-serif;font-size:14px;background:#f5f5f5;padding:12px;border-radius:6px">${message.replace(/\n/g, "<br>")}</p>
+        <p style="font-family:sans-serif;font-size:14px;background:#f5f5f5;padding:12px;border-radius:6px">${safeMessage}</p>
       `,
     });
 
@@ -50,7 +56,7 @@ export async function POST(req: NextRequest) {
       to: email,
       subject: "Got your message — René Vision",
       html: `
-        <p>Hi ${name},</p>
+        <p>Hi ${safeName},</p>
         <p>Thanks for reaching out. I'll get back to you within 1–2 business days.</p>
         <p>In the meantime, feel free to browse the portfolio or book a consultation directly at <a href="${process.env.NEXT_PUBLIC_CALENDLY_URL}">${process.env.NEXT_PUBLIC_CALENDLY_URL}</a>.</p>
         <p>— Jean-Robert</p>

@@ -84,7 +84,10 @@ export default function RootLayout({
         />
         <JsonLd />
       </head>
-      <body className={`${GeistSans.variable} ${fraunces.variable} antialiased`}>
+      <body
+        className={`${GeistSans.variable} ${fraunces.variable} antialiased`}
+        suppressHydrationWarning
+      >
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-WTTRHDXBXB"
           strategy="afterInteractive"

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { rateLimit } from "@/lib/rateLimit";
+import { escapeHtml } from "@/lib/escapeHtml";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const PHOTOGRAPHER_EMAIL = "j-r@renevision.net";
@@ -27,7 +28,7 @@ export async function POST(req: NextRequest) {
       from: FROM_EMAIL,
       to: PHOTOGRAPHER_EMAIL,
       subject: "New session prep guide request",
-      html: `<p>Someone requested the session prep guide.</p><p><strong>Email:</strong> ${email}</p>`,
+      html: `<p>Someone requested the session prep guide.</p><p><strong>Email:</strong> ${escapeHtml(email)}</p>`,
     });
 
     // Confirm to subscriber

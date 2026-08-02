@@ -32,7 +32,9 @@ export default function SiteHeader() {
   // Lock body scroll when menu is open
   useEffect(() => {
     document.body.style.overflow = isMenuOpen ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [isMenuOpen]);
 
   return (
@@ -52,7 +54,7 @@ export default function SiteHeader() {
               alt="René Vision"
               width={3510}
               height={2421}
-              className="h-auto w-[104px] object-contain brightness-0 sm:w-[120px]"
+              className="h-auto w-[104px] object-contain sm:w-[120px]"
               priority
             />
           </Link>
@@ -66,7 +68,9 @@ export default function SiteHeader() {
                   key={item.href}
                   href={item.href}
                   className={`link-underline text-[13px] uppercase tracking-[0.22em] transition-colors duration-300 ${
-                    isActive ? "is-active text-ink" : "text-muted hover:text-ink"
+                    isActive
+                      ? "is-active text-ink"
+                      : "text-muted hover:text-ink"
                   }`}
                 >
                   {item.label}
@@ -114,7 +118,9 @@ export default function SiteHeader() {
       {/* Mobile overlay */}
       <div
         className={`fixed inset-0 z-30 flex flex-col bg-paper transition-all duration-500 ease-editorial md:hidden ${
-          isMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+          isMenuOpen
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none"
         }`}
       >
         <div className="flex flex-1 flex-col items-start justify-center gap-2 px-10">
@@ -125,9 +131,13 @@ export default function SiteHeader() {
                 key={item.href}
                 href={item.href}
                 onClick={() => setIsMenuOpen(false)}
-                style={{ transitionDelay: isMenuOpen ? `${120 + i * 70}ms` : "0ms" }}
+                style={{
+                  transitionDelay: isMenuOpen ? `${120 + i * 70}ms` : "0ms",
+                }}
                 className={`font-display text-5xl leading-tight transition-all duration-500 ease-editorial ${
-                  isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+                  isMenuOpen
+                    ? "translate-y-0 opacity-100"
+                    : "translate-y-6 opacity-0"
                 } ${isActive ? "italic text-ink" : "text-ink/60 hover:text-ink"}`}
               >
                 {item.label}
