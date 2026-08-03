@@ -100,9 +100,9 @@ export default function Home() {
             className="word-rise mt-10 flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between"
             style={{ animationDelay: "760ms" }}
           >
-            <p className="max-w-md text-base leading-7 text-muted">
+            <p className="max-w-md text-base leading-7 text-muted pb-6">
               Portraits, editorial, and special events — shot with honesty and
-              intention. No performative poses. No awkward direction.
+              intention. A collaboration for the ages to come.
             </p>
             <div className="flex items-center gap-6">
               <CalendlyPopupButton
